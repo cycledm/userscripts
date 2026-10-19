@@ -137,7 +137,7 @@ test("explicit button switches cc, removing all variants and preserving other by
     assert.equal(result.buttons[1].attributes["aria-pressed"], "true");
 });
 
-test("Default removes all cc variants, preserves other bytes, and saves preference", () => {
+test("Auto removes all cc variants, preserves other bytes, and saves preference", () => {
     for (const [query, expected] of [
         ["cc=cn", ""], ["CC=", ""], ["%63%63=hk", ""],
         ["CC=cn&x=a%20b&%63c=us&x=2", "?x=a%20b&x=2"],
@@ -149,7 +149,7 @@ test("Default removes all cc variants, preserves other bytes, and saves preferen
     }
 });
 
-test("Default without cc saves preference without reloading; saved Default never auto-cleans URLs", () => {
+test("Auto without cc saves preference without reloading; saved Auto never auto-cleans URLs", () => {
     const result = run({ saved: "off", url: "https://store.steampowered.com/?x=a%20b#top" });
     result.buttons.at(-1).events.click();
     assert.deepEqual(result.navigations, []);
@@ -157,7 +157,7 @@ test("Default without cc saves preference without reloading; saved Default never
     assert.deepEqual(run({ saved: "off", url: "https://store.steampowered.com/?cc=us" }).navigations, []);
 });
 
-test("explicit Default can remove cc when login state is unknown", () => {
+test("explicit Auto can remove cc when login state is unknown", () => {
     const result = run({ state: "unknown", url: "https://store.steampowered.com/?cc=cn&x=1" });
     result.buttons.at(-1).events.click();
     assert.deepEqual(result.navigations, ["https://store.steampowered.com/?x=1"]);

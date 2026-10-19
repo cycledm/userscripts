@@ -14,16 +14,16 @@ manual choices and a compact glass toolbar.
 - Login detection uses Steam's `data-userinfo` and account UI. It is best effort;
   Steam page changes may require an update. On restored/visible pages and before
   control actions, a newly detected login hides existing controls and stops rewriting.
-- Options are **🇨🇳 CN**, **🇭🇰 HK**, **🇯🇵 JP**, **🇺🇸 US**, and **🌐 Default**,
-  in that order. Chinese pages use 国区、港区、日区、美区、默认.
-- Only clicking a region or Default button saves a preference through `GM_setValue`.
+- Options are **🇨🇳 CN**, **🇭🇰 HK**, **🇯🇵 JP**, **🇺🇸 US**, and **🌐 Auto**,
+  in that order. Chinese pages use 国区、港区、日区、美区、自动.
+- Only clicking a region or Auto button saves a preference through `GM_setValue`.
   Page loads and expanding/collapsing never save a region. Other tabs read the
   latest preference on reload. Signed-in visits leave existing preferences intact.
 - Automatic navigation adds the preferred `cc` only if no `cc` exists. An existing
   `cc` wins, including empty values, repeated keys, encoded names and case variants.
   Explicitly choosing a region replaces all `cc` variants and reloads, preserving
   other parameters' original encoding and the fragment.
-- Clicking **🌐 Default** saves Default, removes all current `cc` variants, and
+- Clicking **🌐 Auto** saves Auto, removes all current `cc` variants, and
   reloads if needed. Future loads leave URLs untouched, including links with their
   own `cc`. It does not reset Steam's region cookies or guarantee a pricing region.
 - The selected option and toggle tooltip describe the preference, not proof of
@@ -114,7 +114,7 @@ pinned Tailwind CLI. Installing and using the script needs none of these tools.
 No repository package manifest is required.
 
 Simulated-browser tests cover signed-in early exit and hidden controls after login,
-stored-choice precedence, manual-only preference writes, URL preservation, Default cleanup,
+stored-choice precedence, manual-only preference writes, URL preservation, Auto cleanup,
 loop protection and collapse accessibility. Local browser previews exercise
 responsive layout and animation. These do not prove real-account price changes
 or end-to-end Tampermonkey, Violentmonkey, physical-phone or Safari/iOS behavior.

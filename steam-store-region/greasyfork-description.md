@@ -12,16 +12,16 @@ manual choices and a compact, animated glass toolbar.
 - Login detection uses Steam page data and account UI and is best effort. On
   restored/visible pages and before control actions, a newly detected login hides
   existing controls and stops rewriting. Steam layout changes may require updates.
-- Only clicking a region or Default button saves a preference. Page loads and
+- Only clicking a region or Auto button saves a preference. Page loads and
   expanding/collapsing never save the initial choice.
 
-Options are **🇨🇳 CN**, **🇭🇰 HK**, **🇯🇵 JP**, **🇺🇸 US**, and **🌐 Default**, in
+Options are **🇨🇳 CN**, **🇭🇰 HK**, **🇯🇵 JP**, **🇺🇸 US**, and **🌐 Auto**, in
 that order. Chinese pages use Chinese names. Saved choices apply on future eligible visits.
 
 Automatic navigation adds the preferred `cc` only when no `cc` exists. Existing
 values, including empty, repeated, encoded or case-variant names, are preserved.
 Clicking a region explicitly replaces all `cc` variants and reloads while keeping
-other parameters' encoding and the fragment. Clicking **🌐 Default** saves Default,
+other parameters' encoding and the fragment. Clicking **🌐 Auto** saves Auto,
 removes current `cc` variants and reloads if needed; future URLs are left alone,
 including links with their own `cc`. Steam cookies are not reset.
 
