@@ -1,0 +1,32 @@
+<p><a href="https://greasyfork.org/en/scripts/601010">English</a> | <a href="https://greasyfork.org/zh-CN/scripts/601010">简体中文</a></p>
+
+<h2>Google CN Redirect</h2>
+
+<p>Redirect <code>google.cn</code> and <code>www.google.cn</code> to <code>https://www.google.com</code>, keeping useful search parameters and showing a transition page that follows your system theme.</p>
+
+<ul>
+  <li>Keeps your query (<code>q</code>) and the original <code>client</code> when present. Neither is required to redirect, and the script does not force a Safari client value.</li>
+  <li>Preserves language, region, SafeSearch, pagination, search type, and supported filters. Drops unknown parameters and URL fragments using an allowlist.</li>
+  <li>Provides a light/dark transition card, loading indicator, and manual continue link. Reduced-motion preferences disable the animation.</li>
+  <li>Uses online Tailwind with local fallback CSS. Navigation does not wait for the CDN, and there is no artificial animation delay.</li>
+  <li>Replaces the current history entry so Back does not return to the redirect.</li>
+</ul>
+
+<h3>Experimental system-theme sync</h3>
+
+<p>On <code>.com</code> search results, requests <code>cs=1</code> for dark and <code>cs=0</code> for light when the system theme changes. This reloads the results page and may interrupt reading or unsubmitted input. Direct <code>.com</code> visits without <code>cs</code> start syncing on the next system-theme change. Google may ignore the parameter in some environments.</p>
+
+<p>Set <code>SYNC_SYSTEM_THEME = false</code> near the top of the script to disable this workaround. It does not edit Google account preferences or cookies.</p>
+
+<h3>Scope and limitations</h3>
+
+<ul>
+  <li>Runs only in the top frame on <code>google.cn</code> / <code>www.google.cn</code>, plus the <code>www.google.com/search</code> page for theme synchronization.</li>
+  <li>Unknown parameters are removed; non-search paths or features depending on other parameters may lose functionality. URL cleaning does not prevent cookie or account tracking, or undo the original request to <code>.cn</code>.</li>
+  <li>The transition loads third-party Tailwind JavaScript from jsDelivr with <code>no-referrer</code>; CDN failure or CSP blocking leaves local fallback styles usable. No CDN code is loaded by this script on <code>.com</code>.</li>
+  <li><code>client=safari</code> banner suppression and Safari/iOS/userscript-manager compatibility have not been independently verified. Automated tests and local transition-page previews do not prove Google server behavior.</li>
+</ul>
+
+<p><a href="https://github.com/cycledm/userscripts/blob/main/google-cn-redirect/README.md">Full parameter list and usage notes</a> · <a href="https://github.com/cycledm/userscripts/issues">Report an issue</a></p>
+
+<p>Licensed under <strong>GPL-3.0-or-later</strong>. Copyright (C) 2026 CycleDM.</p>

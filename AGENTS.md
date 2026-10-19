@@ -113,10 +113,14 @@ published on Greasy Fork or its public listing changes, update both indexes
 and any affected script documentation. Do not publish externally merely to
 populate an index link; publication requires authorization.
 
-If a script provides `greasyfork-description.md` and
-`greasyfork-description-zh-cn.md`, keep both aligned with its bilingual READMEs
+If a script provides `greasyfork-description.html` and
+`greasyfork-description-zh-cn.html`, keep both aligned with its bilingual READMEs
 when behavior or usage changes. Use absolute public links in these descriptions
-so they work on Greasy Fork. Their additional-information sync URLs must be
+so they work on Greasy Fork. Use HTML fragments containing only Greasy Fork's
+allowed elements and attributes, without document wrappers, scripts, or external
+styles. Configure English and Simplified Chinese as separate localized entries;
+HTML does not provide automatic language switching. Their sync format must be
+HTML, and their additional-information sync URLs must be
 configured separately on Greasy Fork; committing the files does not configure
 that setting.
 

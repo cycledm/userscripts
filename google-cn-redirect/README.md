@@ -80,12 +80,16 @@ Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 
 The metadata links to the source directory and the repository's issue tracker.
 For Greasy Fork's additional-information sync, use the English
-[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)
+[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.html)
 and the Simplified Chinese
-[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md).
-These use absolute links suitable for display outside GitHub. Configure each
-language's additional-information sync URL in Greasy Fork's script management
-page; adding files to this repository does not configure that setting for you.
+[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.html).
+These are HTML fragments using Greasy Fork's allowed basic tags and absolute
+links. Language links open the corresponding localized Greasy Fork page.
+Configure English and Simplified Chinese as separate additional-information
+entries, select **HTML** as the format for each, and set their sync URLs in
+Greasy Fork's script management page. If previously configured, replace the old
+`.md` URLs with the `.html` URLs above. Committing these files does not change
+Greasy Fork's settings automatically.
 
 The transition uses online [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)
 (`@tailwindcss/browser@4` from jsDelivr), plus complete local fallback CSS.
