@@ -122,6 +122,8 @@ for an English-default script, use the English file in the default entry and
 add only a `zh-CN` localized entry for Chinese. Do not add a duplicate English
 entry. Match other localizations to their `@name:<locale>` metadata. Language
 selection is managed by Greasy Fork, independently of the markup format.
+Do not add language-switching links to these publication descriptions; rely on
+Greasy Fork's localized entries. Keep reciprocal language links in READMEs.
 Their sync format must be Markdown, and their additional-information sync URLs
 must be configured separately on Greasy Fork; committing the files does not
 configure that setting.

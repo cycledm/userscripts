@@ -45,7 +45,7 @@
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->
 
-元数据已提供源码目录和仓库问题反馈链接。Greasy Fork 的附加说明可分别使用[英文 Markdown 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)和[简体中文 Markdown 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md)同步。两份文件均为使用绝对链接的 Markdown 文件，语言链接指向 GF 对应语言页面。
+元数据已提供源码目录和仓库问题反馈链接。Greasy Fork 的附加说明可分别使用[英文 Markdown 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)和[简体中文 Markdown 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md)同步。两份文件均为使用绝对链接的 Markdown 文件，由 GF 选择对应语言的说明，发布正文不再提供语言切换入口。
 
 在 GF 脚本管理页面，将英文源填入**默认附加说明**（当前脚本默认语言为英语），再添加一个**汉语（中国）`zh-CN`** 本地化条目，填入中文源，与 `@name:zh-CN` 对应。不要另建与默认条目重复的英文条目。两项内容格式均选择 **Markdown**。若此前已配置 HTML，请将 `.html` 地址替换为上述 `.md` 地址，并把格式改为 Markdown；提交文件不会自动更改 GF 的设置。
 

@@ -83,8 +83,8 @@ For Greasy Fork's additional-information sync, use the English
 [description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)
 and the Simplified Chinese
 [description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md).
-These are Markdown files using absolute links. Language links open the
-corresponding localized Greasy Fork page.
+These are Markdown files using absolute links. Greasy Fork selects the
+localized description; the publication text does not include language switches.
 In Greasy Fork's script management page, use the English source for the
 **default additional information** (this script's default locale is English).
 Add one **Chinese (China), `zh-CN`** localized entry for the Chinese source,

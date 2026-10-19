@@ -1,5 +1,3 @@
-[English](https://greasyfork.org/en/scripts/601010) | [简体中文](https://greasyfork.org/zh-CN/scripts/601010)
-
 # Google CN Redirect
 
 Redirect `google.cn` and `www.google.cn` to `https://www.google.com`, keeping

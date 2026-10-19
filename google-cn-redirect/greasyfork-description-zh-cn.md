@@ -1,5 +1,3 @@
-[English](https://greasyfork.org/en/scripts/601010) | [简体中文](https://greasyfork.org/zh-CN/scripts/601010)
-
 # Google 中国域名跳转
 
 将 `google.cn` 和 `www.google.cn` 跳转到 `https://www.google.com`，保留必要的搜索参数，并显示跟随系统深浅色模式的过渡页。
