@@ -5,7 +5,7 @@ const vm = require("node:vm");
 const source = fs.readFileSync(require("node:path").join(__dirname, "../steam-store-region.user.js"), "utf8");
 
 function run({ url = "https://store.steampowered.com/app/10/", state = "guest",
-    saved, storage = new Map(), storageFails = false, saveFails = false, readFails = false, deleteFails = false,
+    saved, storage = new Map(), storageFails = false, saveFails = false, readFails = false,
     frame = false, info, account = false, header = false } = {}) {
     class Element {
         constructor(tag) { this.tag = tag; this.children = []; this.attributes = {}; this.events = {}; }
@@ -43,7 +43,7 @@ function run({ url = "https://store.steampowered.com/app/10/", state = "guest",
             // Model an old saved expanded state; the new script must ignore it.
             return key === "steam-store-region-collapsed" ? false : saved;
         },
-        GM_deleteValue: key => { if (deleteFails) throw Error("blocked"); deletions.push(key); saved = undefined; },
+        GM_deleteValue: key => { deletions.push(key); saved = undefined; },
         GM_setValue: (key, value) => { if (saveFails) throw Error("blocked"); settings.push([key, value]); },
         sessionStorage: {
             getItem: key => { if (storageFails) throw Error("blocked"); return storage.get(key); },
@@ -53,7 +53,7 @@ function run({ url = "https://store.steampowered.com/app/10/", state = "guest",
     const panel = body.children[0]?.shadowRoot.children[1];
     const collapsible = panel?.children[0];
     const controls = collapsible?.children[0].children[0];
-    return { navigations, settings, deletions, reads, events, panel, controls, collapsible,
+    return { host: body.children[0], navigations, settings, deletions, reads, events, panel, controls, collapsible,
         toggle: panel?.children[1], buttons: controls?.children.slice(1), storage,
         setLoginState: next => { state = next; } };
 }
@@ -100,14 +100,17 @@ test("top-frame and origin boundary", () => {
     assert.equal(run({ url: "https://steamcommunity.com/app/10" }).panel, undefined);
 });
 
-test("signed-in pages without a preference create usable controls and default to Off without saving", () => {
-    for (const settings of [{ state: "member" }, { account: true }, { info: '{"logged_in":true}', header: true }]) {
-        const result = run(settings);
-        assert.ok(result.panel);
-        assert.equal(result.panel.attributes["data-region"], "off");
-        assert.ok(result.buttons.every(button => !button.disabled));
-        assert.deepEqual(result.navigations, []);
-        assert.deepEqual(result.settings, []);
+test("signed-in pages never create controls, access preferences or navigate", () => {
+    for (const detection of [{ state: "member" }, { account: true }, { info: '{"logged_in":true}', header: true }]) {
+        for (const saved of [undefined, "cn", "hk", "jp", "us", "off"]) {
+            const result = run({ ...detection, saved });
+            assert.equal(result.panel, undefined);
+            assert.deepEqual(result.navigations, []);
+            assert.deepEqual(result.reads, []);
+            assert.deepEqual(result.settings, []);
+            assert.deepEqual(result.deletions, []);
+            assert.equal(result.storage.size, 0);
+        }
     }
 });
 
@@ -118,7 +121,7 @@ test("unknown login state defaults to CN and all buttons remain available", () =
     assert.deepEqual(result.settings, []);
 });
 
-test("account UI overrides guest data; header fallback handles malformed data", () => {
+test("account UI and logged-in data disable the script; malformed data remains eligible", () => {
     assert.deepEqual(run({ account: true }).navigations, []);
     assert.equal(run({ state: "unknown", header: true }).navigations.length, 1);
     assert.equal(run({ info: "broken", header: true }).navigations.length, 1);
@@ -160,52 +163,51 @@ test("explicit Default can remove cc when login state is unknown", () => {
     assert.deepEqual(result.navigations, ["https://store.steampowered.com/?x=1"]);
 });
 
-test("login changes update only unsaved defaults and never hide or disable controls", () => {
+test("login detection hides existing controls and prevents later navigation or writes", () => {
     for (const event of ["pageshow", "visibilitychange"]) {
         const result = run({ url: "https://store.steampowered.com/?cc=cn" });
         result.setLoginState("member");
         result.events[event]();
-        assert.equal(result.panel.attributes["data-region"], "off");
-        assert.ok(!result.panel.hidden);
-        assert.ok(result.buttons.every(button => !button.disabled));
+        assert.equal(result.host.hidden, true);
+        result.buttons[1].events.click();
+        result.buttons.at(-1).events.click();
+        result.toggle.events.click();
         assert.deepEqual(result.navigations, []);
+        assert.deepEqual(result.settings, []);
+        assert.deepEqual(result.deletions, []);
         result.setLoginState("guest");
         result.events[event]();
+        assert.equal(result.host.hidden, false);
         assert.equal(result.panel.attributes["data-region"], "cn");
-        assert.deepEqual(result.settings, []);
     }
 });
 
-test("signed-in users can explicitly choose and persist a region", () => {
-    const result = run({ state: "member", url: "https://store.steampowered.com/?cc=cn" });
-    result.toggle.events.click();
-    assert.deepEqual(result.settings, []);
+test("clicks recheck login before saving, including without a visibility event", () => {
+    const result = run({ url: "https://store.steampowered.com/?cc=cn" });
+    result.setLoginState("member");
     result.buttons[1].events.click();
-    assert.deepEqual(result.settings, [["steam-store-region", "hk"]]);
-    assert.deepEqual(result.navigations, ["https://store.steampowered.com/?cc=hk"]);
-    result.setLoginState("guest");
-    result.events.visibilitychange();
-    assert.equal(result.panel.attributes["data-region"], "hk");
+    assert.equal(result.host.hidden, true);
+    assert.deepEqual(result.settings, []);
+    assert.deepEqual(result.navigations, []);
 });
 
-test("stored regions win; signed-in stored Default is cleared without GM writes", () => {
-    for (const state of ["guest", "member", "unknown"]) {
+test("stored choices win for signed-out and unknown sessions without automatic writes", () => {
+    for (const state of ["guest", "unknown"]) {
         for (const saved of ["cn", "hk", "jp", "us", "off"]) {
             const result = run({ state, saved });
             assert.equal(result.panel.attributes["data-region"], saved);
             assert.deepEqual(result.settings, []);
-            assert.deepEqual(result.deletions, state === "member" && saved === "off"
-                ? ["steam-store-region"] : []);
+            assert.deepEqual(result.deletions, []);
             assert.equal(result.navigations.length, saved === "off" ? 0 : 1);
         }
     }
 });
 
-test("missing, invalid and unreadable preferences use login defaults without persisting them", () => {
-    for (const state of ["guest", "member", "unknown"]) {
+test("missing, invalid and unreadable preferences default to CN without persisting it", () => {
+    for (const state of ["guest", "unknown"]) {
         for (const options of [{}, { saved: null }, { saved: "" }, { saved: "invalid" }, { readFails: true }]) {
             const result = run({ state, ...options });
-            assert.equal(result.panel.attributes["data-region"], state === "member" ? "off" : "cn");
+            assert.equal(result.panel.attributes["data-region"], "cn");
             assert.deepEqual(result.settings, []);
         }
     }
@@ -314,64 +316,8 @@ test("only region preference persists; legacy collapse state is never read or wr
     assert.ok(reloaded.toggle.title.includes("🇯🇵"));
 });
 
-
-test("signed-in Default deletes preference, cleans cc, and restores login-based defaults", () => {
-    for (const saved of [undefined, "jp", "off"]) {
-        const result = run({ state: "member", saved, url: "https://store.steampowered.com/?CC=jp&x=1#top" });
-        result.deletions.length = 0; // Ignore the initial saved-Default migration.
-        result.buttons.at(-1).events.click();
-        assert.deepEqual(result.deletions, ["steam-store-region"]);
-        assert.deepEqual(result.settings, []);
-        assert.deepEqual(result.navigations, ["https://store.steampowered.com/?x=1#top"]);
-        assert.equal(result.panel.attributes["data-region"], "off");
-        result.setLoginState("guest");
-        result.events.visibilitychange();
-        assert.equal(result.panel.attributes["data-region"], "cn");
-    }
-});
-
-test("Default uses current login state and deletion failure preserves choice", () => {
-    const result = run({ saved: "hk", url: "https://store.steampowered.com/?cc=hk" });
-    result.setLoginState("member");
-    result.buttons.at(-1).events.click();
-    assert.deepEqual(result.deletions, ["steam-store-region"]);
-    assert.deepEqual(result.settings, []);
-    const failed = run({ state: "member", saved: "hk", deleteFails: true,
-        url: "https://store.steampowered.com/?cc=hk" });
-    failed.buttons.at(-1).events.click();
-    assert.deepEqual(failed.deletions, []);
-    assert.deepEqual(failed.settings, []);
-    assert.deepEqual(failed.navigations, []);
-    assert.equal(failed.panel.attributes["data-region"], "hk");
-    assert.equal(failed.controls.children[0].textContent, "无法保存设置");
-});
-
 test("every region label retains a visible non-breaking space after its emoji", () => {
     for (const button of run().buttons) {
         assert.match(button.textContent, /^\S+\u00a0\S+$/u);
     }
-});
-
-
-test("each signed-in load clears saved Default and resumes CN after logout", () => {
-    for (let load = 0; load < 2; load++) {
-        const result = run({ state: "member", saved: "off", url: "https://store.steampowered.com/?cc=us" });
-        assert.deepEqual(result.deletions, ["steam-store-region"]);
-        assert.deepEqual(result.settings, []);
-        assert.deepEqual(result.navigations, []);
-        result.setLoginState("guest");
-        result.events.visibilitychange();
-        assert.equal(result.panel.attributes["data-region"], "cn");
-    }
-});
-
-test("failed initial Default cleanup keeps toolbar usable and stored preference effective", () => {
-    const result = run({ state: "member", saved: "off", deleteFails: true });
-    assert.deepEqual(result.deletions, []);
-    assert.deepEqual(result.navigations, []);
-    result.setLoginState("guest");
-    result.events.visibilitychange();
-    assert.equal(result.panel.attributes["data-region"], "off");
-    result.buttons[2].events.click();
-    assert.deepEqual(result.settings, [["steam-store-region", "jp"]]);
 });

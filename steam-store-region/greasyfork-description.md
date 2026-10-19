@@ -1,31 +1,29 @@
 # Steam Store Region
 
-Choose a Steam storefront display region with remembered manual choices and a
-compact, animated glass toolbar. It runs for signed-in and signed-out visitors.
+Choose a display region for signed-out Steam storefront pages with remembered
+manual choices and a compact, animated glass toolbar.
 
 ## Defaults and saved choices
 
-- A valid saved region always wins, regardless of login state.
-- Without a valid saved choice, clearly signed-in visitors start with **🌐 Default**
-  (no automatic rewriting); signed-out or unknown visitors start with **🇨🇳 CN**.
-- Each signed-in page load also deletes a stored Default, restoring login-based defaults.
-- Other saved preference changes require clicking a region or Default button.
-  While signed in, Default deletes it; other choices save it. Page loads,
-  login detection and expanding/collapsing never save the initial choice.
-- The toolbar always remains available. Login detection uses Steam page data and
-  account/login UI; it is best effort, and Steam layout changes may require updates.
+- Detected signed-in sessions exit without creating controls, reading or changing
+  preferences, or rewriting URLs. Existing saved choices remain intact.
+- Otherwise a valid saved choice wins; without one, start with **🇨🇳 CN**.
+  Unknown login state is treated the same as signed out.
+- Login detection uses Steam page data and account UI and is best effort. On
+  restored/visible pages and before control actions, a newly detected login hides
+  existing controls and stops rewriting. Steam layout changes may require updates.
+- Only clicking a region or Default button saves a preference. Page loads and
+  expanding/collapsing never save the initial choice.
 
 Options are **🇨🇳 CN**, **🇭🇰 HK**, **🇯🇵 JP**, **🇺🇸 US**, and **🌐 Default**, in
-that order. Chinese pages use Chinese names. Saved choices take precedence on
-future page loads, including while signed in.
+that order. Chinese pages use Chinese names. Saved choices apply on future eligible visits.
 
 Automatic navigation adds the preferred `cc` only when no `cc` exists. Existing
 values, including empty, repeated, encoded or case-variant names, are preserved.
 Clicking a region explicitly replaces all `cc` variants and reloads while keeping
-other parameters' encoding and the fragment. Clicking **🌐 Default** removes
-current `cc` variants and reloads if needed. While signed in, it also deletes the
-saved preference, restoring login-based defaults (CN after signing out). Otherwise,
-it saves Default, leaving future URLs alone, including links with their own `cc`. Steam cookies are not reset.
+other parameters' encoding and the fragment. Clicking **🌐 Default** saves Default,
+removes current `cc` variants and reloads if needed; future URLs are left alone,
+including links with their own `cc`. Steam cookies are not reset.
 
 ## Compact controls and motion
 
@@ -63,16 +61,16 @@ This session value is for loop protection, not a saved region preference.
 
 This requests a display region, not a change to account country, purchase
 eligibility, proxy routing or dynamically loaded search-result prices. Steam
-may ignore `cc` or retain region cookies, especially for signed-in accounts.
+may ignore `cc` or retain region cookies. Signed-in currency display is outside this script's scope.
 The script cannot bypass region restrictions or fix failed page loads. It does
 not intercept Steam-client traffic or require Surge/MITM. Disable an existing
 Steam region Surge module separately to avoid independent rewrites.
 
-Only `GM_getValue`, `GM_setValue`, and `GM_deleteValue` are used for region preferences. No cookies
+Only `GM_getValue` and `GM_setValue` are used for region preferences. No cookies
 or credentials are read, no account identifiers are stored, and no external
 requests are made apart from storefront navigation.
 
-Simulated tests cover login-based defaults, saved-choice priority, manual-only
+Simulated tests cover signed-in early exit, hidden controls after login, saved-choice priority, manual-only
 preference writes, URL handling and collapse behavior. Local browser previews
 check responsive layout and motion; these do not prove actual account prices or
 end-to-end userscript-manager, physical-phone or Safari/iOS compatibility.

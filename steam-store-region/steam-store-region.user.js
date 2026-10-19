@@ -2,9 +2,9 @@
 // @name         Steam Store Region
 // @name:zh-CN   Steam 商店区域切换
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.1.5
-// @description  Switch Steam storefront regions with remembered choices; start with China when signed out and Default when signed in.
-// @description:zh-CN 切换 Steam 商店展示区域并记住手动选择；未登录初始为国区，已登录初始为默认。
+// @version      0.1.6
+// @description  Switch signed-out Steam storefront regions with remembered choices and compact glass controls.
+// @description:zh-CN 为未登录的 Steam 商店网页切换展示区域并记住手动选择，提供紧凑毛玻璃控件。
 // @author       CycleDM
 // @license      GPL-3.0-or-later
 // @homepageURL  https://github.com/cycledm/userscripts/tree/main/steam-store-region
@@ -13,7 +13,6 @@
 // @run-at       document-end
 // @noframes
 // @grant        GM_getValue
-// @grant        GM_deleteValue
 // @grant        GM_setValue
 // ==/UserScript==
 
@@ -61,41 +60,24 @@
     const allowed = /^\/(?:$|(?:app|bundle|sub|search|category|genre|tags|specials|sale|charts|publisher|developer|franchise|curators?|wishlist|points|explore|steamdeck)(?:\/|$))/;
     if (!allowed.test(location.pathname) || /^\/search\/results(?:\/|$)/i.test(location.pathname)) return;
 
+    if (isSignedIn()) return;
+
     const chinese = /^zh\b/i.test(document.documentElement.lang || navigator.language);
-    let region = loginState() === "member" ? "off" : "cn";
-    let hasPreference = false;
+    let region = "cn";
     try {
         const saved = GM_getValue(SETTING, null);
-        if (OPTIONS.some(([value]) => value === saved)) {
-            region = saved;
-            hasPreference = true;
-            // Migrate a saved Default back to login-based defaults while signed in.
-            if (saved === "off" && loginState() === "member") {
-                GM_deleteValue(SETTING);
-                hasPreference = false;
-            }
-        }
-    } catch (_) { /* Keep the current default/preference if storage is unavailable. */ }
+        if (OPTIONS.some(([value]) => value === saved)) region = saved;
+    } catch (_) { /* Retain CN when settings cannot be read. */ }
 
-    function loginState() {
-        // Account UI takes priority over a possibly stale signed-out marker.
-        if (document.querySelector("#account_pulldown, #account_dropdown, #global_actions .user_avatar")) return "member";
+    function isSignedIn() {
+        if (document.querySelector("#account_pulldown, #account_dropdown, #global_actions .user_avatar")) return true;
         const info = document.querySelector("[data-userinfo]");
         if (info) {
             try {
-                const user = JSON.parse(info.getAttribute("data-userinfo"));
-                if (user.logged_in === true) return "member";
-                if (user.logged_in === false) return "guest";
-            } catch (_) { /* Fall back to the global header. */ }
+                return JSON.parse(info.getAttribute("data-userinfo")).logged_in === true;
+            } catch (_) { /* Unrecognized page data is not evidence of a signed-in session. */ }
         }
-        const links = document.querySelectorAll("#global_actions a[href]");
-        for (const link of links) {
-            try {
-                const url = new URL(link.href, location.href);
-                if (url.origin === location.origin && /^\/login(?:\/|$)/.test(url.pathname)) return "guest";
-            } catch (_) { /* Ignore malformed links. */ }
-        }
-        return "unknown";
+        return false;
     }
 
     function regionURL(force) {
@@ -117,7 +99,7 @@
     }
 
     function navigate(force = false) {
-        if (region === "off" && !force) return;
+        if (isSignedIn() || (region === "off" && !force)) return;
         try {
             const target = regionURL(force);
             if (!target || target === location.href) return;
@@ -184,15 +166,14 @@
         status.setAttribute("role", "status");
         const buttons = [];
         function refresh() {
-            const state = loginState();
-            if (!hasPreference) region = state === "member" ? "off" : "cn";
+            host.hidden = isSignedIn();
+            if (host.hidden) return false;
             renderCollapsed();
-            status.textContent = state === "member" ? (chinese ? "商店区域 · 已登录" : "Store region · signed in")
-                : state === "unknown" ? (chinese ? "商店区域 · 登录状态未知" : "Store region · login unknown")
-                    : (chinese ? "商店区域" : "Store region");
+            status.textContent = chinese ? "商店区域" : "Store region";
             for (const [button, value] of buttons) {
                 button.setAttribute("aria-pressed", String(value === region));
             }
+            return true;
         }
         controls.append(status);
         for (const [index, [value, zh, en]] of OPTIONS.entries()) {
@@ -206,17 +187,13 @@
                 ? (chinese ? "移除当前网址的 cc 参数并停止后续改写" : "Remove cc from this URL and stop future rewrites")
                 : (chinese ? "保存区域并重新加载当前页面" : "Save region and reload this page");
             button.addEventListener("click", () => {
-                const clearPreference = value === "off" && loginState() === "member";
-                try {
-                    if (clearPreference) GM_deleteValue(SETTING);
-                    else GM_setValue(SETTING, value);
-                }
+                if (!refresh()) return;
+                try { GM_setValue(SETTING, value); }
                 catch (_) {
                     status.textContent = chinese ? "无法保存设置" : "Could not save preference";
                     return;
                 }
                 region = value;
-                hasPreference = !clearPreference;
                 renderCollapsed();
                 refresh();
                 navigate(true);
@@ -225,7 +202,7 @@
             controls.append(button);
         }
         toggle.addEventListener("click", () => {
-            refresh();
+            if (!refresh()) return;
             collapsed = !collapsed;
             renderCollapsed();
         });

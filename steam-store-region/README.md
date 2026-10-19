@@ -2,41 +2,32 @@
 
 # Steam Store Region
 
-Choose a Steam storefront display region with login-aware initial defaults,
-remembered manual choices, and a compact glass toolbar.
+Choose a display region for signed-out Steam storefront pages with remembered
+manual choices and a compact glass toolbar.
 
 ## Region selection
 
-| Situation | Initial selection |
-| --- | --- |
-| A valid region preference exists | Use that preference, regardless of login state |
-| No valid preference and Steam identifies a signed-in visitor | 🌐 Default (no automatic rewriting) |
-| No valid preference and signed out or login state unknown | 🇨🇳 CN |
-
-The toolbar runs in all three cases. Login detection never hides it or disables
-region buttons. It uses Steam's `data-userinfo`, account UI, or global login link;
-this is best-effort DOM detection, not an official authentication API. When no
-manual preference exists, state checks on restored/visible pages can update the
-initial selection without saving it. Steam page changes may require an update.
-
+- When Steam identifies a signed-in session, the script exits without creating
+  controls, reading or changing preferences, or rewriting the URL.
+- Otherwise, a valid saved choice wins; without one, the initial region is **🇨🇳 CN**.
+  Unknown login state is treated the same as signed out.
+- Login detection uses Steam's `data-userinfo` and account UI. It is best effort;
+  Steam page changes may require an update. On restored/visible pages and before
+  control actions, a newly detected login hides existing controls and stops rewriting.
 - Options are **🇨🇳 CN**, **🇭🇰 HK**, **🇯🇵 JP**, **🇺🇸 US**, and **🌐 Default**,
   in that order. Chinese pages use 国区、港区、日区、美区、默认.
-- Each signed-in page load also deletes a stored Default, restoring login-based defaults.
-- Other saved preference changes require a successful click on a region or Default button.
-  While signed in, Default deletes it through `GM_deleteValue`; other choices use `GM_setValue`. Loading a page, detecting login state, or expanding and
-  collapsing the toolbar never saves a region. Saved choices take precedence on
-  subsequent page loads, including while signed in. Other tabs read them on reload.
+- Only clicking a region or Default button saves a preference through `GM_setValue`.
+  Page loads and expanding/collapsing never save a region. Other tabs read the
+  latest preference on reload. Signed-in visits leave existing preferences intact.
 - Automatic navigation adds the preferred `cc` only if no `cc` exists. An existing
   `cc` wins, including empty values, repeated keys, encoded names and case variants.
   Explicitly choosing a region replaces all `cc` variants and reloads, preserving
   other parameters' original encoding and the fragment.
-- Clicking **🌐 Default** removes all current `cc` variants and reloads if needed.
-  While signed in, Default clears the saved choice, restoring login-based defaults
-  on future loads (CN after signing out). Otherwise, it saves Default, which leaves
-  future URLs untouched, including links with their own `cc`. It does not reset Steam's region cookies or guarantee a pricing region.
-- The selected option and the toggle's tooltip describe the preference, not proof
-  of the server's actual pricing region. Logged-in users can request any listed
-  display region; Steam may ignore the request or use the account's country.
+- Clicking **🌐 Default** saves Default, removes all current `cc` variants, and
+  reloads if needed. Future loads leave URLs untouched, including links with their
+  own `cc`. It does not reset Steam's region cookies or guarantee a pricing region.
+- The selected option and toggle tooltip describe the preference, not proof of
+  the server's actual pricing region. Signed-in currency display is outside this script's scope.
 
 ## Toolbar and animation
 
@@ -104,7 +95,7 @@ Select **Markdown** for both; do not add a duplicate English localization.
 Configure these URLs separately on Greasy Fork. Committing files does not configure
 synchronization or publish the script.
 
-Only `GM_getValue`, `GM_setValue`, and `GM_deleteValue` are requested, for region preferences. The
+Only `GM_getValue` and `GM_setValue` are requested, for region preferences. The
 script does not read cookies or credentials, store account identifiers, or make
 external requests apart from storefront navigation.
 
@@ -122,8 +113,8 @@ Rebuilding needs Python 3, Node.js/npm, and npm access or a populated cache for 
 pinned Tailwind CLI. Installing and using the script needs none of these tools.
 No repository package manifest is required.
 
-Simulated-browser tests cover region defaults across login states, stored-choice
-precedence, manual-only preference writes, URL preservation, Default cleanup,
+Simulated-browser tests cover signed-in early exit and hidden controls after login,
+stored-choice precedence, manual-only preference writes, URL preservation, Default cleanup,
 loop protection and collapse accessibility. Local browser previews exercise
 responsive layout and animation. These do not prove real-account price changes
 or end-to-end Tampermonkey, Violentmonkey, physical-phone or Safari/iOS behavior.

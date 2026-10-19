@@ -14,7 +14,7 @@ documented per script based on available evidence.
 | Script | Description | Raw | Greasy Fork |
 | --- | --- | --- | --- |
 | [Google CN Redirect](google-cn-redirect/) | Redirect google.cn to google.com with selected parameters and system-themed transitions | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js) | [Greasy Fork](https://greasyfork.org/scripts/601010) |
-| [Steam Store Region](steam-store-region/) | Switch Steam storefront regions with saved choices and responsive glass controls | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js) | [Greasy Fork](https://greasyfork.org/scripts/601020) |
+| [Steam Store Region](steam-store-region/) | Switch signed-out Steam storefront regions with saved choices and responsive glass controls | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js) | [Greasy Fork](https://greasyfork.org/scripts/601020) |
 
 ## Development
 
