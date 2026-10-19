@@ -15,6 +15,8 @@ Default signed-out Steam storefront pages to China with a persistent region swit
   storage. Other open tabs read it on their next page load.
 - The toolbar's right-hand button collapses it to the selected region's flag
   (**🇨🇳**, **🇭🇰**, **🇯🇵**, or **🇺🇸**); **Default** displays **🌐**.
+  The collapsed icon is enlarged and centered in a 40 × 40 px button with no
+  leftover spacing from the hidden controls.
   The icon reflects the saved preference, not Steam's actual pricing region.
   Click it again to expand. The state is saved separately from the region
   preference and restored on future page loads. Collapsing does not disable
