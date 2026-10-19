@@ -2,7 +2,7 @@
 // @name         Steam Store Region
 // @name:zh-CN   Steam 商店区域切换
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.1.2
+// @version      0.1.0
 // @description  Default signed-out Steam storefront pages to China, with China, Hong Kong, Japan, US, and Default (no rewriting) controls.
 // @description:zh-CN 为未登录的 Steam 商店网页默认添加国区参数，提供国区、港区、日区、美区和默认（不改写）按钮。
 // @author       CycleDM
