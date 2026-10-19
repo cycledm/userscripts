@@ -127,11 +127,12 @@ README edits.
 
 ### Greasy Fork Link Automation
 
-- `.github/workflows/sync-greasyfork-links.yml` runs on every push to `main`
-  and manual dispatch. Do not add scheduled polling. Push runs wait 30 seconds
-  before querying Greasy Fork; this is a grace period, not proof that its webhook
-  has finished. Use manual dispatch when publication or synchronization completes
-  later.
+- `.github/workflows/sync-greasyfork-links.yml` runs on every push to `main`,
+  every 15 minutes (minutes 7, 22, 37, and 52), and manual dispatch. Keep this
+  short polling interval unless the user requests a change. Scheduled runs catch
+  listings published after the last push, but GitHub may delay their execution.
+  Push runs wait 30 seconds before querying Greasy Fork; this is a grace period,
+  not proof that its webhook has finished. Scheduled and manual runs do not wait.
 - `.github/automation/sync-greasyfork-links.py` uses the public API for the
   configured Greasy Fork account. Match the exact namespace and a default or
   localized source `@name`; never infer a listing from a similar name or purpose.

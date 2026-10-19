@@ -23,10 +23,13 @@ development and documentation requirements.
 ## Greasy Fork link synchronization
 
 [Sync Greasy Fork links](.github/workflows/sync-greasyfork-links.yml) runs after
-every push to `main`, and manually from the Actions tab. Push runs wait 30 seconds
-before querying Greasy Fork to give its webhook time to process; manual runs do
-not wait. There is no scheduled polling. The delay does not guarantee webhook
-completion; run it manually if publication or synchronization finishes later.
+every push to `main`, every 15 minutes (minutes 7, 22, 37, and 52 of each hour),
+and manually from the Actions tab. Push runs wait 30 seconds before querying
+Greasy Fork to give its webhook time to process; scheduled and manual runs do
+not wait. Scheduled runs catch listings published after the last push. GitHub
+may delay scheduled runs, so this is not a guaranteed 15-minute response time;
+use manual dispatch when needed. The push delay does not guarantee webhook
+completion either.
 It reads the public API for [cycledm (1647773)](https://greasyfork.org/users/1647773-cycledm),
 matches the exact namespace and any source `@name` / localized `@name`, and
 updates only the Greasy Fork columns in both root indexes and the marked

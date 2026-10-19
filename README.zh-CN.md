@@ -18,7 +18,7 @@
 
 ## Greasy Fork 链接同步
 
-[Sync Greasy Fork links](.github/workflows/sync-greasyfork-links.yml) 在每次推送至 `main` 后及 Actions 页面手动运行时执行。Push 触发时，在查询 Greasy Fork 前等待 30 秒，为 Webhook 处理预留时间；手动运行不等待。不进行定时轮询。延迟不能保证 Webhook 已处理完成；若发布或同步稍后才完成，可手动重跑。
+[Sync Greasy Fork links](.github/workflows/sync-greasyfork-links.yml) 在每次推送至 `main` 后、每 15 分钟（每小时第 7、22、37、52 分钟）及 Actions 页面手动运行时执行。Push 触发时，在查询 Greasy Fork 前等待 30 秒，为 Webhook 处理预留时间；定时及手动运行不等待。定时任务用于补查上次 Push 之后才发布的条目。GitHub 可能延迟执行，因此不能保证在 15 分钟内更新；需要时可手动运行。Push 的延迟也不能保证 Webhook 已处理完成。
 
 它读取 [cycledm（1647773）](https://greasyfork.org/users/1647773-cycledm) 的公开 API，精确匹配 namespace 及源码中的默认或本地化 `@name`，仅更新两份根索引中的 Greasy Fork 列，以及各脚本双语 README 中带 `greasyfork-link` 标记的区域。新增脚本时请保留这些标记。未匹配或已删除的条目显示“未发布”；重复匹配或 API 响应异常时，在写入任何 README 前失败退出。
 
