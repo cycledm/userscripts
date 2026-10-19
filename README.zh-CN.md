@@ -10,7 +10,7 @@
 
 | 脚本 | 简介 | Raw | Greasy Fork |
 | --- | --- | --- | --- |
-| [Google 中国域名跳转](google-cn-redirect/) | 将 google.cn 跳转到 google.com，保留必要参数，过渡页跟随系统主题 | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js) | 未发布 |
+| [Google 中国域名跳转](google-cn-redirect/) | 将 google.cn 跳转到 google.com，保留必要参数，过渡页跟随系统主题 | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js) | [Greasy Fork](https://greasyfork.org/scripts/601010) |
 
 ## 开发
 

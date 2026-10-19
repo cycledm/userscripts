@@ -13,7 +13,7 @@ documented per script based on available evidence.
 
 | Script | Description | Raw | Greasy Fork |
 | --- | --- | --- | --- |
-| [Google CN Redirect](google-cn-redirect/) | Redirect google.cn to google.com with selected parameters and system-themed transitions | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js) | Not published |
+| [Google CN Redirect](google-cn-redirect/) | Redirect google.cn to google.com with selected parameters and system-themed transitions | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js) | [Greasy Fork](https://greasyfork.org/scripts/601010) |
 
 ## Development
 

@@ -75,7 +75,7 @@ You can also use the
 from the verified `main` branch.
 
 <!-- greasyfork-link:start -->
-Greasy Fork: Not published
+Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->
 
 The transition uses online [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)

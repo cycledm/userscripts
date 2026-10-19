@@ -42,7 +42,7 @@
 打开 [google-cn-redirect.user.js](google-cn-redirect.user.js)，将内容导入用户脚本管理器，并允许脚本访问匹配的网站。也可使用已确认的 `main` 分支上的 [Raw 安装链接](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js)。
 
 <!-- greasyfork-link:start -->
-Greasy Fork: 未发布
+Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->
 
 过渡页使用在线 [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)（jsDelivr 的 `@tailwindcss/browser@4`），并提供完整的本地兜底 CSS。Tailwind 官方将此运行时定位为开发用途；此处为满足在线 Tailwind 的需求采用它，不引入构建工具。CDN 失败或被页面 CSP 限制时，兜底样式仍可用，且不影响导航时机。CDN 会在 `.cn` 过渡页运行第三方 JavaScript；页面不展示搜索内容，资源请求使用 `no-referrer`，不加载外部 Logo 或字体。
