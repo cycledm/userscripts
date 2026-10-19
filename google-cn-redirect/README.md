@@ -80,18 +80,18 @@ Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 
 The metadata links to the source directory and the repository's issue tracker.
 For Greasy Fork's additional-information sync, use the English
-[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.html)
+[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)
 and the Simplified Chinese
-[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.html).
-These are HTML fragments using Greasy Fork's allowed basic tags and absolute
-links. Language links open the corresponding localized Greasy Fork page.
+[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md).
+These are Markdown files using absolute links. Language links open the
+corresponding localized Greasy Fork page.
 In Greasy Fork's script management page, use the English source for the
 **default additional information** (this script's default locale is English).
 Add one **Chinese (China), `zh-CN`** localized entry for the Chinese source,
 matching `@name:zh-CN`. Do not add a separate English localization duplicating
-the default entry. Select **HTML** as the format for both sync URLs.
-If previously configured, replace the old
-`.md` URLs with the `.html` URLs above. Committing these files does not change
+the default entry. Select **Markdown** as the format for both sync URLs.
+If previously configured for HTML, replace the `.html` URLs with the `.md`
+URLs above and change the format to Markdown. Committing these files does not change
 Greasy Fork's settings automatically.
 
 The transition uses online [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)

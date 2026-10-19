@@ -113,19 +113,18 @@ published on Greasy Fork or its public listing changes, update both indexes
 and any affected script documentation. Do not publish externally merely to
 populate an index link; publication requires authorization.
 
-If a script provides `greasyfork-description.html` and
-`greasyfork-description-zh-cn.html`, keep both aligned with its bilingual READMEs
+If a script provides `greasyfork-description.md` and
+`greasyfork-description-zh-cn.md`, keep both aligned with its bilingual READMEs
 when behavior or usage changes. Use absolute public links in these descriptions
-so they work on Greasy Fork. Use HTML fragments containing only Greasy Fork's
-allowed elements and attributes, without document wrappers, scripts, or external
-styles. The default additional information follows the script's default locale:
+so they work on Greasy Fork. Prefer readable Markdown for these descriptions.
+The default additional information follows the script's default locale:
 for an English-default script, use the English file in the default entry and
 add only a `zh-CN` localized entry for Chinese. Do not add a duplicate English
-entry. Match other localizations to their `@name:<locale>` metadata. HTML does
-not provide automatic language switching. Their sync format must be
-HTML, and their additional-information sync URLs must be
-configured separately on Greasy Fork; committing the files does not configure
-that setting.
+entry. Match other localizations to their `@name:<locale>` metadata. Language
+selection is managed by Greasy Fork, independently of the markup format.
+Their sync format must be Markdown, and their additional-information sync URLs
+must be configured separately on Greasy Fork; committing the files does not
+configure that setting.
 
 | Change | Required maintenance |
 | --- | --- |

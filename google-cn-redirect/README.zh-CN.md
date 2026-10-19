@@ -45,9 +45,9 @@
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->
 
-元数据已提供源码目录和仓库问题反馈链接。Greasy Fork 的附加说明可分别使用[英文 HTML 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.html)和[简体中文 HTML 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.html)同步。两份文件均为使用 GF 允许的基础标签及绝对链接的 HTML 片段，语言链接指向 GF 对应语言页面。
+元数据已提供源码目录和仓库问题反馈链接。Greasy Fork 的附加说明可分别使用[英文 Markdown 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)和[简体中文 Markdown 说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md)同步。两份文件均为使用绝对链接的 Markdown 文件，语言链接指向 GF 对应语言页面。
 
-在 GF 脚本管理页面，将英文源填入**默认附加说明**（当前脚本默认语言为英语），再添加一个**汉语（中国）`zh-CN`** 本地化条目，填入中文源，与 `@name:zh-CN` 对应。不要另建与默认条目重复的英文条目。两项内容格式均选择 **HTML**。若此前已配置 `.md` 地址，请替换为上述 `.html` 地址；提交文件不会自动更改 GF 的设置。
+在 GF 脚本管理页面，将英文源填入**默认附加说明**（当前脚本默认语言为英语），再添加一个**汉语（中国）`zh-CN`** 本地化条目，填入中文源，与 `@name:zh-CN` 对应。不要另建与默认条目重复的英文条目。两项内容格式均选择 **Markdown**。若此前已配置 HTML，请将 `.html` 地址替换为上述 `.md` 地址，并把格式改为 Markdown；提交文件不会自动更改 GF 的设置。
 
 过渡页使用在线 [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)（jsDelivr 的 `@tailwindcss/browser@4`），并提供完整的本地兜底 CSS。Tailwind 官方将此运行时定位为开发用途；此处为满足在线 Tailwind 的需求采用它，不引入构建工具。CDN 失败或被页面 CSP 限制时，兜底样式仍可用，且不影响导航时机。CDN 会在 `.cn` 过渡页运行第三方 JavaScript；页面不展示搜索内容，资源请求使用 `no-referrer`，不加载外部 Logo 或字体。
 
