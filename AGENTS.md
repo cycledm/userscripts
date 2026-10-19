@@ -118,8 +118,11 @@ If a script provides `greasyfork-description.html` and
 when behavior or usage changes. Use absolute public links in these descriptions
 so they work on Greasy Fork. Use HTML fragments containing only Greasy Fork's
 allowed elements and attributes, without document wrappers, scripts, or external
-styles. Configure English and Simplified Chinese as separate localized entries;
-HTML does not provide automatic language switching. Their sync format must be
+styles. The default additional information follows the script's default locale:
+for an English-default script, use the English file in the default entry and
+add only a `zh-CN` localized entry for Chinese. Do not add a duplicate English
+entry. Match other localizations to their `@name:<locale>` metadata. HTML does
+not provide automatic language switching. Their sync format must be
 HTML, and their additional-information sync URLs must be
 configured separately on Greasy Fork; committing the files does not configure
 that setting.

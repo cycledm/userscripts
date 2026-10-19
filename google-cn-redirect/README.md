@@ -85,9 +85,12 @@ and the Simplified Chinese
 [description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.html).
 These are HTML fragments using Greasy Fork's allowed basic tags and absolute
 links. Language links open the corresponding localized Greasy Fork page.
-Configure English and Simplified Chinese as separate additional-information
-entries, select **HTML** as the format for each, and set their sync URLs in
-Greasy Fork's script management page. If previously configured, replace the old
+In Greasy Fork's script management page, use the English source for the
+**default additional information** (this script's default locale is English).
+Add one **Chinese (China), `zh-CN`** localized entry for the Chinese source,
+matching `@name:zh-CN`. Do not add a separate English localization duplicating
+the default entry. Select **HTML** as the format for both sync URLs.
+If previously configured, replace the old
 `.md` URLs with the `.html` URLs above. Committing these files does not change
 Greasy Fork's settings automatically.
 
