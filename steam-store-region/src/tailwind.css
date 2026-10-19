@@ -1,3 +1,84 @@
 /* No Preflight: utilities are scoped to the script's Shadow DOM. */
 :host { all: initial; }
 @tailwind utilities;
+
+.region-panel {
+    @apply z-[2147483647] flex flex-col items-end gap-2 rounded-xl border border-solid border-slate-500/60 bg-slate-900/95 p-2 font-sans text-sm leading-5 text-white shadow-lg;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    right: calc(1rem + env(safe-area-inset-right, 0px));
+    max-width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    transition: gap 200ms ease-in-out;
+}
+
+.region-panel[data-collapsed="true"] { gap: 0; }
+
+.region-collapsible {
+    @apply grid min-h-0 min-w-0 grid-cols-[1fr] grid-rows-[1fr] opacity-100;
+    max-width: 40rem;
+    max-height: 100vh;
+    transition: grid-template-columns 200ms ease-in-out, grid-template-rows 200ms ease-in-out,
+        max-width 200ms ease-in-out, max-height 200ms ease-in-out, opacity 200ms ease-in-out;
+}
+
+.region-collapsible[data-collapsed="true"] {
+    grid-template-columns: 0fr;
+    grid-template-rows: 0fr;
+    max-width: 0;
+    max-height: 0;
+    opacity: 0;
+}
+
+.region-controls {
+    @apply flex w-max min-w-[8.5rem] flex-col items-stretch gap-1 overflow-y-auto overscroll-contain p-1;
+    max-width: calc(100vw - 4rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: calc(100vh - 8rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 8rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+
+.region-status { @apply px-2 py-1 text-xs text-slate-200; }
+
+.region-button, .region-toggle {
+    @apply m-0 inline-flex box-border min-h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 border-solid bg-slate-700/80 font-sans text-sm leading-5 text-white;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.region-button { @apply px-3 py-2 font-medium; }
+.region-toggle { @apply h-[44px] w-[44px] p-0 leading-none; }
+.region-toggle[data-collapsed="true"] { @apply text-[24px]; }
+.region-button:hover, .region-toggle:hover { @apply bg-slate-600/90; }
+.region-button[aria-pressed="true"] { @apply bg-sky-700; }
+.region-button:disabled { @apply cursor-default opacity-60; }
+.region-button:focus-visible, .region-toggle:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-sky-300;
+}
+
+@screen sm {
+    .region-panel { @apply flex-row items-center gap-1; }
+    .region-panel[data-collapsed="true"] { gap: 0; }
+    .region-controls {
+        @apply flex-row flex-wrap items-center;
+        max-width: calc(100vw - 7rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    }
+}
+
+/* Keep a high-opacity fallback when backdrop filtering is unavailable. */
+@supports ((-webkit-backdrop-filter: blur(16px)) or (backdrop-filter: blur(16px))) {
+    .region-panel {
+        @apply bg-slate-900/80;
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .region-panel, .region-collapsible { transition: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    .region-panel {
+        @apply bg-slate-900;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}

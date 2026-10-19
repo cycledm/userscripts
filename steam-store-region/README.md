@@ -15,7 +15,9 @@ Default signed-out Steam storefront pages to China with a persistent region swit
   storage. Other open tabs read it on their next page load.
 - The toolbar's right-hand button collapses it to the selected region's flag
   (**🇨🇳**, **🇭🇰**, **🇯🇵**, or **🇺🇸**); **Default** displays **🌐**.
-  The collapsed icon is enlarged and centered in a 40 × 40 px button with no
+  It starts collapsed when no valid saved state exists; an existing saved
+  expanded/collapsed preference is preserved.
+  The collapsed icon is enlarged and centered in a 44 × 44 px button with no
   leftover spacing from the hidden controls.
   The icon reflects the saved preference, not Steam's actual pricing region.
   Click it again to expand. The state is saved separately from the region
@@ -23,6 +25,13 @@ Default signed-out Steam storefront pages to China with a persistent region swit
   region rewriting. Width and opacity animate over 200 ms; the system's
   reduced-motion setting disables this animation. Hidden controls are excluded
   from keyboard focus and accessibility navigation while collapsed.
+- Below 640 px, the toolbar opens vertically upward from the bottom-right
+  corner. Wider screens use a horizontal row. Buttons have at least 44 px touch
+  height, and short viewports allow the options to scroll internally. Safe-area
+  insets keep the toolbar clear of screen edges and the home indicator.
+- The dark translucent glass background uses a 16 px backdrop blur and light
+  text. Unsupported blur falls back to a higher-opacity dark background.
+  Reduced-transparency preferences use an opaque background where supported.
 - Automatic navigation adds the preferred `cc` only when none exists. Existing
   `cc` values, including empty, encoded, repeated, or case-variant names, take
   precedence. Clicking a region explicitly replaces all `cc` variants and reloads
@@ -117,7 +126,10 @@ product-page request returned `country_code: CN`. A temporary local browser
 preview using simulated manager storage confirmed the toolbar layout, switching
 to `cc=hk`. Default URL cleanup is covered by simulated-browser tests. The collapsible toolbar was
 also checked locally for collapse, expansion, and restoring the collapsed state
-after a reload. This does not prove
+after a reload. Version 0.1.2 was additionally previewed in 320 × 568, 390 × 740,
+and 568 × 260 px iframe viewports for vertical layout and short-screen scrolling,
+and in a desktop browser for horizontal layout and glass-background readability.
+These are viewport simulations, not physical-phone or iOS safe-area tests. This does not prove
 logged-in behavior on a real account or end-to-end compatibility with
 Tampermonkey, Violentmonkey, Safari/iOS, or Steam's actual regional price response.
 
