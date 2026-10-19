@@ -2,77 +2,89 @@
 
 # Steam 商店区域切换
 
-为未登录的 Steam 商店网页默认添加国区参数，并提供可记忆偏好的区域切换按钮。
+通过紧凑的毛玻璃工具栏选择 Steam 商店展示区域，根据登录状态决定初始选项，并记住手动选择。
 
-## 使用方式
+## 区域选择
 
-- 初始选择为**国区（`cc=cn`）**。右下角依次提供**🇨🇳 国区、🇭🇰 港区（`hk`）、🇯🇵 日区（`jp`）、🇺🇸 美区（`us`）、🌐 默认**，
-  中文页面显示中文，其他页面使用两个大写字母的区域代码（`CN`、`HK`、`JP`、`US`）。高亮表示已保存的偏好，不代表服务器当前的实际价格区域。
-  偏好保存在用户脚本管理器中；其他已打开标签页在下次页面加载时读取新设置。
-- 点击工具栏最右侧按钮可折叠为所选区域的国旗（**🇨🇳、🇭🇰、🇯🇵、🇺🇸**），选择“默认”时显示 **🌐**。
-  每次刷新或完整加载页面都默认折叠；展开/折叠仅对当前页面生效，不再读取旧版保存的折叠状态。
-  折叠图标放大并居中显示于 44 × 44 像素按钮内，隐藏控件不再留下额外间距。
-  图标表示已保存的区域偏好，不代表 Steam 的实际价格区域。再次点击展开。仅区域偏好继续持久化；
-  折叠不会停用区域改写。宽度与透明度采用 200 毫秒过渡，遵循系统的
-  “减少动态效果”设置。折叠后，隐藏控件不会进入键盘焦点或辅助功能导航。
-- 窄于 640 像素时从右下角向上竖向展开，宽屏横向排列。按钮触控高度至少为 44 像素，
-  短屏可在选项区域内部滚动；预留屏幕安全区，避免贴近屏幕边缘或底部手势条。
-- 背景使用深色半透明遮罩与 16 像素毛玻璃模糊，搭配浅色文字。不支持背景模糊时使用更高不透明度的
-  深色背景；浏览器支持系统“减少透明度”偏好时改用不透明背景。
-- 自动处理仅在网址没有 `cc` 时添加偏好区域。已有的 `cc` 优先，包括空值、编码名称、重复和大小写变体。
-  主动点击区域按钮会替换所有 `cc` 变体并重新加载当前页面，其他查询参数与片段保留原有编码。
-- 点击 **🌐 默认**会保存偏好、移除当前网址全部 `cc` 变体，并在需要时重新加载，保留其他参数与片段。
-  登录检测暂停区域改写时仍可主动执行此清理。后续页面加载不再自动处理，包括自带 `cc` 的链接。
-  此选项不会重置 Steam 自身的 Cookie，也不保证实际价格区域。
-- 页面通过 `data-userinfo` 或顶部全局菜单中的登录链接明确表明未登录后才处理。
-  检测到账号入口或已登录数据时暂停；无法判断时也暂停。暂停时区域按钮禁用，“默认”仍可使用。
-  这是基于页面 DOM 的尽力检测，并非 Steam 官方认证接口；页面结构变化时可能需要更新。
-  每次改写前及页面从缓存恢复时重新判断，标签页恢复可见时也刷新工具栏状态。
-- 使用 `document-end` 等待登录状态可读取；首次请求已经到达 Steam，因此可能短暂显示原区域，
-  随后再导航。每个标签页对同一自动目标设置 15 秒防循环保护，防止 Steam 移除 `cc` 后反复加载。
-  会话存储不可用时跳过自动导航，仍可主动点击区域按钮。查询键包含无效编码时保留原页面。
+| 情况 | 初始选项 |
+| --- | --- |
+| 已有有效的区域偏好 | 优先使用该偏好，不受登录状态影响 |
+| 没有有效偏好，且明确识别为已登录 | 🌐 默认（不自动改写） |
+| 没有有效偏好，且未登录或登录状态未知 | 🇨🇳 国区 |
+
+三种情况下工具栏均正常运行，登录检测不会隐藏控件或禁用区域按钮。通过 Steam 的 `data-userinfo`、
+账号入口或顶部登录链接尽力判断状态，并非官方认证接口。没有手动偏好时，页面恢复或标签页恢复可见后的
+状态检查可以调整初始选项，但不会保存。Steam 页面结构变化时可能需要更新。
+
+- 选项依次为 **🇨🇳 国区、🇭🇰 港区、🇯🇵 日区、🇺🇸 美区、🌐 默认**；非中文页面使用 `CN`、`HK`、
+  `JP`、`US` 和 `Default`。
+- 已登录时每次加载也会删除已保存的“默认”，恢复按登录状态选择初始值。
+- 其他偏好变更需要成功点击区域或“默认”按钮；已登录时点击“默认”通过 `GM_deleteValue` 删除偏好，
+  其他选择通过 `GM_setValue` 写入。页面加载、登录检测及展开/折叠都不会
+  保存区域。之后加载页面时以保存的选择为主，包括已登录状态；其他标签页在刷新后读取新偏好。
+- 自动导航仅在没有 `cc` 时添加偏好区域。已有 `cc` 优先，包括空值、重复键、编码名称与大小写变体。
+  主动选择区域会替换全部 `cc` 变体并重新加载，保留其他参数的原始编码及片段。
+- 点击 **🌐 默认**会移除当前全部 `cc` 变体，必要时重新加载。已登录时还会清空保存的偏好，后续恢复按登录状态选择初始值
+  （退出登录后为国区）；其他情况下保存“默认”，之后不再处理网址，包括自带 `cc` 的链接。它不会重置 Steam 的区域 Cookie，也不保证实际价格区域。
+- 高亮选项及展开按钮提示说明的是偏好，不证明服务器实际使用该价格区域。已登录时也可请求列出的任何
+  展示区域，但 Steam 可能忽略请求或使用账号国家。
+
+## 控件与动画
+
+每次完整加载页面都默认折叠，展开/折叠只保存在当前页面内存中，不读取旧版折叠记录。右下角固定锚点
+在展开/折叠过程中始终为 **54 × 54 像素**，按钮触控区域为 **44 × 44 像素**。选项托盘独立展开：
+宽度至少为 640 像素时向左横向展开，窄屏时向上紧凑竖向展开。短屏可内部滚动，并预留屏幕安全区。
+
+| 布局 | 展开 | 折叠 |
+| --- | --- | --- |
+| 横版 | ◀️ | ▶️ |
+| 竖版 | 🔼 | 🔽 |
+
+区域按钮从靠近锚点的一端向外依次显现，带方向位移和轻微回弹；折叠时反序向锚点依次隐去。
+展开约 0.6 秒，折叠约 0.36 秒；CSS 过渡可在中途反向，遵循系统“减少动态效果”设置，关闭位移和延迟。
+折叠控件禁用交互，不进入辅助功能导航。
+
+提高透光程度的深色毛玻璃表面使用 24 像素模糊与饱和度增强，搭配更深的按钮底色、白色文字和轻微文字
+阴影保证对比度。不支持模糊时使用更高不透明度背景，支持系统“减少透明度”时改用不透明背景。
+样式由 Tailwind CSS 3.4.17 预编译，通过 Shadow DOM 隔离；运行时无需 CDN、外部字体或下载编译器。
 
 ## 范围与限制
 
-仅匹配 `https://store.steampowered.com/` 的顶层页面。支持首页以及 `app`、`bundle`、`sub`、
-`search`、`category`、`genre`、`tags`、`specials`、`sale`、`charts`、`publisher`、
-`developer`、`franchise`、`curator`、`curators`、`wishlist`、`points`、`explore`、
-`steamdeck` 路径族；排除 `/search/results`。不改写账号、登录、购物车、结账、API、其他路径、
-iframe 或后台请求。不拦截 SPA 的同文档导航；再次完整加载受支持页面时重新运行。
+仅匹配 `https://store.steampowered.com/` 顶层页面：首页及 `app`、`bundle`、`sub`、`search`、
+`category`、`genre`、`tags`、`specials`、`sale`、`charts`、`publisher`、`developer`、
+`franchise`、`curator`、`curators`、`wishlist`、`points`、`explore`、`steamdeck` 路径族。
+排除 `/search/results`，不改写账号、登录、购物车、结账、API、其他路径、iframe 或后台请求，
+不拦截 SPA 的同文档导航。
 
-脚本通过 `cc` 请求商店展示区域，Steam 可能忽略它或保留区域 Cookie。它不会改变账号国家、
-购买资格、代理路由，也不会直接修改搜索结果动态加载的价格。无法绕过区域限制，也无法修复代理下
-根本无法加载的页面。无需 Surge 模块或 MITM，不拦截 Steam 客户端流量。
-如果用本脚本替代所提供的 Surge 模块，请另行关闭该模块，避免两套独立改写同时生效；
-本脚本无法撤销 Surge 的网络改写或主机级 MITM 设置。
+脚本在 `document-end` 运行，原始请求已到达 Steam，二次导航前可能短暂显示原区域。每个标签页使用
+15 秒的会话存储防循环保护，避免 Steam 移除 `cc` 后重复导航到同一目标。此会话值只用于防循环，
+并非保存的区域偏好。会话存储不可用时跳过自动导航，主动点击按钮仍有效；查询键包含无效编码时保留原网址。
 
-## 安装
+脚本改变的是展示区域请求，不会改变账号国家、购买资格、代理路由或搜索结果动态加载的价格，无法绕过
+区域限制或修复无法加载的页面。不拦截 Steam 客户端流量，无需 Surge/MITM；已有 Steam 区域 Surge
+模块需另行关闭，避免两套独立改写。
 
-将 [steam-store-region.user.js](steam-store-region.user.js) 的内容导入用户脚本管理器，
-并允许脚本访问匹配的 Steam 网站。
-[Raw 安装链接](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js)
-直接指向仓库 `main` 分支中的此脚本文件。
+## 安装与发布
+
+将 [steam-store-region.user.js](steam-store-region.user.js) 导入用户脚本管理器，或使用
+[Raw 安装链接](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js)。
+尚未推送的本地修改在发布前只能通过本地导入使用。
 
 <!-- greasyfork-link:start -->
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601020)
 <!-- greasyfork-link:end -->
 
-Greasy Fork 附加信息同步请使用[英文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description.md)
-作为**默认条目**，另添加一个与 `@name:zh-CN` 对应的**中文（中国），`zh-CN`** 本地化条目，
-使用[中文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description-zh-cn.md)。
-两者格式均选择 **Markdown**，不要额外添加重复的英文本地化条目。需在 Greasy Fork 分别配置两个同步 URL；
-提交文件不会自动配置同步，也不会发布脚本。
+附加信息同步请将[英文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description.md)
+用于**默认条目**，将[中文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description-zh-cn.md)
+用于一个与 `@name:zh-CN` 对应的**中文（中国），`zh-CN`** 本地化条目，两者格式均选 **Markdown**，
+不要额外添加重复的英文本地化条目。需在 Greasy Fork 分别配置这两个 URL；提交文件不会自动配置同步或发布。
 
-仅申请保存区域偏好所需的 `GM_getValue`、`GM_setValue` 权限。不读取 Cookie 或凭据，
-不保存账号标识；除导航到商店网页外，脚本不发起外部请求。
+仅申请区域偏好所需的 `GM_getValue`、`GM_setValue`、`GM_deleteValue` 权限。不读取 Cookie 或凭据，不保存账号标识，
+除商店页面导航外不发起外部请求。
 
-## 样式与开发
+## 开发与验证
 
-工具栏使用 **Tailwind CSS 3.4.17**，预编译后内嵌到 `.user.js`，通过 Shadow DOM
-隔离工具类与商店页面样式。运行时无需 CDN、外部字体或 Tailwind 浏览器编译器，采用 Tailwind
-的[静态 CSS 编译方式](https://v3.tailwindcss.com/docs/installation)。
-
-修改工具类或 `src/tailwind.css` 后运行：
+修改工具类或 `src/tailwind.css` 后重新编译内嵌 CSS：
 
 ```sh
 python3 steam-store-region/src/build-styles.py
@@ -80,26 +92,17 @@ node --check steam-store-region/steam-store-region.user.js
 node --test steam-store-region/tests/region.test.cjs
 ```
 
-重新编译需要 Python 3、Node.js/npm，以及访问 npm 下载固定版本 Tailwind CLI 的网络
-（或已有 npm 缓存）。安装和使用脚本无需这些工具，也无需仓库级包清单或依赖安装。
+编译需要 Python 3、Node.js/npm，以及访问 npm 下载固定版本 Tailwind CLI 的网络或已有缓存；安装和使用
+脚本无需这些工具，无需仓库级包清单。
 
-## 验证
-
-Node 模拟浏览器测试覆盖路径边界、查询参数保留、偏好、主动切换、已登录和未知状态跳过、
-存储失败、每次加载重置折叠、不依赖存储的展开/折叠、辅助功能状态及重定向防循环。已检查 Steam 当前公开 HTML 中未登录的 `data-userinfo` 和顶部
-登录链接标记；一次公开商品页 `cc=cn` 请求返回了 `country_code: CN`。临时本地浏览器预览
-使用模拟的管理器存储，确认了工具栏布局及切换到 `cc=hk`；“默认”清理网址的行为由模拟浏览器测试覆盖。
-另已在本地浏览器确认工具栏折叠与展开；0.1.3 测试验证每次新页面都默认折叠，并忽略旧版折叠记录。
-0.1.2 另在 320 × 568、390 × 740、568 × 260 像素 iframe 视口检查了竖向布局和短屏滚动，
-并在桌面浏览器检查横向布局与毛玻璃背景可读性。这些是视口模拟，不是手机实机或 iOS 安全区测试。
-这不证明真实账号登录后的行为，也不证明 Tampermonkey、Violentmonkey、
-Safari/iOS 的端到端兼容性，或 Steam 实际返回各区域价格的效果。
+模拟浏览器测试覆盖不同登录状态的初始选项、保存偏好优先级、仅手动写入偏好、网址保留、“默认”清理、
+防循环及折叠辅助功能状态。本地浏览器预览检查响应式布局和动画；这些检查不证明真实账号价格变化，
+或 Tampermonkey、Violentmonkey、手机实机、Safari/iOS 的端到端行为。
 
 ## 许可证
 
-CycleDM 的代码使用 **GPL-3.0-or-later**：GNU 通用公共许可证第 3 版，或由您选择的任何后续版本，
-详见仓库 [LICENSE](../LICENSE)。内嵌 Tailwind CSS 工具样式使用 MIT 许可证，
-Copyright (c) Tailwind Labs, Inc.，声明已保留于脚本及
-[src/tailwind-LICENSE](src/tailwind-LICENSE)。
+CycleDM 代码采用 **GPL-3.0-or-later**：GNU 通用公共许可证第 3 版，或由您选择的任何后续版本，
+见 [LICENSE](../LICENSE)。内嵌 Tailwind 工具样式保留 MIT 许可证及 Tailwind Labs, Inc. 版权声明，
+见脚本与 [src/tailwind-LICENSE](src/tailwind-LICENSE)。
 
 Copyright (C) 2026 CycleDM

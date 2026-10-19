@@ -1,82 +1,127 @@
-/* No Preflight: utilities are scoped to the script's Shadow DOM. */
+/* Precompiled Tailwind components, isolated inside the script's Shadow DOM. */
 :host { all: initial; }
 @tailwind utilities;
 
+/* The anchor stays 54px square: opening never changes its height or position. */
 .region-panel {
-    @apply z-[2147483647] flex flex-col items-end gap-2 rounded-xl border border-solid border-slate-500/60 bg-slate-900/95 p-2 font-sans text-sm leading-5 text-white shadow-lg;
+    @apply z-[2147483647] box-border flex h-[54px] w-[54px] items-center justify-center p-1 font-sans text-sm leading-5 text-white;
     bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
     right: calc(1rem + env(safe-area-inset-right, 0px));
-    max-width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
-    transition: gap 200ms ease-in-out;
 }
 
-.region-panel[data-collapsed="true"] { gap: 0; }
+.region-panel, .region-controls {
+    @apply rounded-xl border border-solid border-white/25 shadow-lg;
+}
+
+/* Keep the anchor's blur on a sibling layer so it cannot trap the tray's backdrop. */
+.region-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.region-panel::before, .region-controls { @apply bg-slate-900/95; }
 
 .region-collapsible {
-    @apply grid min-h-0 min-w-0 grid-cols-[1fr] grid-rows-[1fr] opacity-100;
-    max-width: 40rem;
-    max-height: 100vh;
-    transition: grid-template-columns 200ms ease-in-out, grid-template-rows 200ms ease-in-out,
-        max-width 200ms ease-in-out, max-height 200ms ease-in-out, opacity 200ms ease-in-out;
+    --pull-x: 0px;
+    --pull-y: 14px;
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    width: max-content;
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0, 0);
+    transform-origin: bottom right;
+    transition: opacity 180ms ease-out, transform 440ms cubic-bezier(.16, 1, .3, 1.12), visibility 0s;
 }
 
 .region-collapsible[data-collapsed="true"] {
-    grid-template-columns: 0fr;
-    grid-template-rows: 0fr;
-    max-width: 0;
-    max-height: 0;
     opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(var(--pull-x), var(--pull-y));
+    transition: opacity 140ms ease-in 220ms, transform 260ms ease-in 100ms, visibility 0s 360ms;
 }
 
 .region-controls {
-    @apply flex w-max min-w-[8.5rem] flex-col items-stretch gap-1 overflow-y-auto overscroll-contain p-1;
-    max-width: calc(100vw - 4rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
-    max-height: calc(100vh - 8rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-    max-height: calc(100dvh - 8rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    @apply box-border flex w-max flex-col items-stretch gap-1 overflow-x-hidden overflow-y-auto overscroll-contain p-1;
+    max-width: calc(100vw - 2rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: calc(100vh - 7rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    max-height: calc(100dvh - 7rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
 }
 
-.region-status { @apply px-2 py-1 text-xs text-slate-200; }
+.region-status { @apply sr-only; }
 
 .region-button, .region-toggle {
-    @apply m-0 inline-flex box-border min-h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 border-solid bg-slate-700/80 font-sans text-sm leading-5 text-white;
+    @apply m-0 inline-flex box-border h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 border-solid font-sans text-sm leading-5 text-white;
+    background: rgb(15 23 42 / .58);
+    text-shadow: 0 1px 2px rgb(0 0 0 / .45);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
 
-.region-button { @apply px-3 py-2 font-medium; }
-.region-toggle { @apply h-[44px] w-[44px] p-0 leading-none; }
-.region-toggle[data-collapsed="true"] { @apply text-[24px]; }
-.region-button:hover, .region-toggle:hover { @apply bg-slate-600/90; }
-.region-button[aria-pressed="true"] { @apply bg-sky-700; }
-.region-button:disabled { @apply cursor-default opacity-60; }
+.region-button {
+    @apply whitespace-nowrap px-2 py-0 font-medium;
+    opacity: 1;
+    transform: translate(0, 0);
+    transition: opacity 240ms ease-out, transform 440ms cubic-bezier(.16, 1, .3, 1.28), background-color 120ms;
+    transition-delay: calc((4 - var(--order)) * 38ms), calc((4 - var(--order)) * 38ms), 0s;
+}
+
+.region-collapsible[data-collapsed="true"] .region-button {
+    opacity: 0;
+    transform: translate(var(--pull-x), var(--pull-y));
+    transition-timing-function: ease-in, cubic-bezier(.4, 0, .8, .2), ease;
+    transition-duration: 180ms, 200ms, 120ms;
+    transition-delay: calc(var(--order) * 30ms), calc(var(--order) * 30ms), 0s;
+}
+
+.region-toggle { @apply w-[44px] p-0 text-[20px] leading-none; }
+.region-icon-horizontal { display: none; }
+.region-icon-vertical { display: inline; }
+.region-button:hover, .region-toggle:hover { background: rgb(15 23 42 / .76); }
+.region-button[aria-pressed="true"] { @apply bg-sky-700/95; }
 .region-button:focus-visible, .region-toggle:focus-visible {
     @apply outline outline-2 outline-offset-2 outline-sky-300;
 }
 
 @screen sm {
-    .region-panel { @apply flex-row items-center gap-1; }
-    .region-panel[data-collapsed="true"] { gap: 0; }
-    .region-controls {
-        @apply flex-row flex-wrap items-center;
-        max-width: calc(100vw - 7rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    .region-collapsible {
+        --pull-x: 14px;
+        --pull-y: 0px;
+        top: 0;
+        right: calc(100% + 8px);
+        bottom: auto;
+        transform-origin: center right;
     }
+    .region-controls { @apply flex-row overflow-visible; max-height: none; }
+    .region-icon-horizontal { display: inline; }
+    .region-icon-vertical { display: none; }
 }
 
-/* Keep a high-opacity fallback when backdrop filtering is unavailable. */
-@supports ((-webkit-backdrop-filter: blur(16px)) or (backdrop-filter: blur(16px))) {
-    .region-panel {
-        @apply bg-slate-900/80;
-        -webkit-backdrop-filter: blur(16px);
-        backdrop-filter: blur(16px);
+/* Light transmission comes from the panel; darker button surfaces protect contrast. */
+@supports ((-webkit-backdrop-filter: blur(24px)) or (backdrop-filter: blur(24px))) {
+    .region-panel::before, .region-controls {
+        background: rgb(15 23 42 / .46);
+        -webkit-backdrop-filter: blur(24px) saturate(140%);
+        backdrop-filter: blur(24px) saturate(140%);
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .region-panel, .region-collapsible { transition: none; }
+    .region-collapsible, .region-collapsible[data-collapsed="true"],
+    .region-button, .region-collapsible[data-collapsed="true"] .region-button {
+        transition: none;
+        transform: none;
+    }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-    .region-panel {
+    .region-panel::before, .region-controls {
         @apply bg-slate-900;
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
