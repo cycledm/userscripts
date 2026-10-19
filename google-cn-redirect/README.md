@@ -70,9 +70,13 @@ Google also provides an [Appearance → Device default setting](https://support.
 
 Open [google-cn-redirect.user.js](google-cn-redirect.user.js) and import its
 contents into your userscript manager. Enable access to the matched sites.
-The public repository's default branch is verified as `main`; the
+You can also use the
 [Raw installation URL](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js)
-will work after this new file is pushed. It has not been published to Greasy Fork.
+from the verified `main` branch.
+
+<!-- greasyfork-link:start -->
+Greasy Fork: Not published
+<!-- greasyfork-link:end -->
 
 The transition uses online [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)
 (`@tailwindcss/browser@4` from jsDelivr), plus complete local fallback CSS.

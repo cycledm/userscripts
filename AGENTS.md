@@ -125,6 +125,30 @@ Any code change that affects documentation accuracy requires a documentation
 review. Internal fixes without user-visible effects do not require mechanical
 README edits.
 
+### Greasy Fork Link Automation
+
+- `.github/workflows/sync-greasyfork-links.yml` runs on every push to `main`
+  and manual dispatch. Do not add scheduled polling. Push runs wait 30 seconds
+  before querying Greasy Fork; this is a grace period, not proof that its webhook
+  has finished. Use manual dispatch when publication or synchronization completes
+  later.
+- `.github/automation/sync-greasyfork-links.py` uses the public API for the
+  configured Greasy Fork account. Match the exact namespace and a default or
+  localized source `@name`; never infer a listing from a similar name or purpose.
+  This automation discovers public listings; it does not publish scripts or
+  configure their Raw sync URLs.
+- Keep exactly one `<!-- greasyfork-link:start -->` / `<!-- greasyfork-link:end -->`
+  pair in each script's English and Chinese READMEs. The automation owns only
+  these sections and the Greasy Fork cells in the two root indexes. Keep both
+  languages aligned and retain localized unpublished states when no match exists.
+- Keep API failures and ambiguous matches fatal before writing READMEs. Commit
+  only README changes, only when needed, using the job-scoped `GITHUB_TOKEN`.
+  Do not add credentials, force-push, or expand permissions to bypass branch rules.
+- Validate changes with
+  `python3 -m unittest discover -s .github/automation -p 'test_*.py' -v` and a
+  read-only `--dry-run` where network access is available. Python test module
+  filenames use underscores so `unittest` discovery can import them.
+
 ## Commit Messages
 
 Use `<type>(<scope>): <summary>`. The scope is optional; use

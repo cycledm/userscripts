@@ -1,0 +1,50 @@
+name: Sync Greasy Fork links
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-greasyfork-links
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'cycledm/userscripts' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      GREASY_FORK_USER_ID: '1647773'
+    steps:
+      - name: Check out main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+
+      - name: Test link synchronization
+        run: python3 -m unittest discover -s .github/automation -p 'test_*.py' -v
+
+      - name: Allow time for Greasy Fork webhook processing
+        if: github.event_name == 'push'
+        run: sleep 30
+
+      - name: Discover published scripts and update bilingual READMEs
+        run: python3 .github/automation/sync-greasyfork-links.py --user-id "$GREASY_FORK_USER_ID"
+
+      - name: Commit README changes only
+        run: |
+          git add -- README.md README.zh-CN.md ':(glob)*/README.md' ':(glob)*/README.zh-CN.md'
+          if git diff --cached --quiet; then
+            echo 'Greasy Fork links are already up to date.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: sync published Greasy Fork links'
+          git push origin HEAD:main
