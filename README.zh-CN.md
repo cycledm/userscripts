@@ -10,8 +10,9 @@
 
 | 脚本 | 简介 | Raw | Greasy Fork |
 | --- | --- | --- | --- |
+| [Google 中国域名跳转](google-cn-redirect/) | 将 google.cn 跳转到 google.com，保留必要参数，过渡页跟随系统主题 | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js) | 未发布 |
 
-目前尚未添加脚本。
+第一份脚本目前仅在本地；推送到 `main` 后 Raw 链接才可用于安装。在此之前，请通过本地 `.user.js` 文件安装。
 
 ## 开发
 

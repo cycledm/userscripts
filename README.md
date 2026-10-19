@@ -13,8 +13,10 @@ documented per script based on available evidence.
 
 | Script | Description | Raw | Greasy Fork |
 | --- | --- | --- | --- |
+| [Google CN Redirect](google-cn-redirect/) | Redirect google.cn to google.com with selected parameters and system-themed transitions | [Raw](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js) | Not published |
 
-No scripts have been added yet.
+The first script is currently local; its Raw link becomes installable after it
+is pushed to `main`. Until then, install from the local `.user.js` file.
 
 ## Development
 
