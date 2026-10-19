@@ -68,8 +68,16 @@ The [Raw installation link](https://raw.githubusercontent.com/cycledm/userscript
 points directly to this script on the repository's `main` branch.
 
 <!-- greasyfork-link:start -->
-Greasy Fork: Not published
+Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601020)
 <!-- greasyfork-link:end -->
+
+For Greasy Fork's additional-information sync, use the English
+[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description.md)
+for the **default entry**, and add one **Chinese (China), `zh-CN`** localized entry
+using the [Chinese description source](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description-zh-cn.md),
+matching `@name:zh-CN`. Select **Markdown** for both. Do not add a duplicate
+English localization. Configure these two sync URLs separately on Greasy Fork;
+committing the files does not configure synchronization or publish the script.
 
 Only `GM_getValue` and `GM_setValue` are requested, for region and collapse preferences.
 No cookies or credentials are read, no account identifiers are stored, and no

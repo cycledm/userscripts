@@ -47,8 +47,14 @@ iframe 或后台请求。不拦截 SPA 的同文档导航；再次完整加载�
 直接指向仓库 `main` 分支中的此脚本文件。
 
 <!-- greasyfork-link:start -->
-Greasy Fork: 未发布
+Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601020)
 <!-- greasyfork-link:end -->
+
+Greasy Fork 附加信息同步请使用[英文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description.md)
+作为**默认条目**，另添加一个与 `@name:zh-CN` 对应的**中文（中国），`zh-CN`** 本地化条目，
+使用[中文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/greasyfork-description-zh-cn.md)。
+两者格式均选择 **Markdown**，不要额外添加重复的英文本地化条目。需在 Greasy Fork 分别配置两个同步 URL；
+提交文件不会自动配置同步，也不会发布脚本。
 
 仅申请保存区域偏好及折叠状态所需的 `GM_getValue`、`GM_setValue` 权限。不读取 Cookie 或凭据，
 不保存账号标识；除导航到商店网页外，脚本不发起外部请求。

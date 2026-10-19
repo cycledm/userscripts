@@ -16,7 +16,8 @@ the default documentation language; Simplified Chinese is maintained alongside i
   names such as `README.md`, `README.zh-CN.md`, `LICENSE`, `AGENTS.md`,
   `.gitignore`, and names required by tools or ecosystems.
 - A script directory named `<script-name>` must contain
-  `<script-name>.user.js`, `README.md`, and `README.zh-CN.md`.
+  `<script-name>.user.js`, `README.md`, `README.zh-CN.md`,
+  `greasyfork-description.md`, and `greasyfork-description-zh-cn.md`.
 - Keep version numbers in `@version`, never in file names.
 - Both root READMEs index all actual scripts in four columns: script name,
   description, Raw, and Greasy Fork. Link each script name to its directory and
@@ -113,9 +114,13 @@ published on Greasy Fork or its public listing changes, update both indexes
 and any affected script documentation. Do not publish externally merely to
 populate an index link; publication requires authorization.
 
-If a script provides `greasyfork-description.md` and
-`greasyfork-description-zh-cn.md`, keep both aligned with its bilingual READMEs
-when behavior or usage changes. Use absolute public links in these descriptions
+Every script must provide `greasyfork-description.md` (English) and
+`greasyfork-description-zh-cn.md` (Simplified Chinese), including before its
+first Greasy Fork publication. These are publication-ready additional-information
+sources, not evidence that a script is published. Keep both aligned with its
+bilingual READMEs when behavior or usage changes. Both READMEs must link to the
+two Raw description sources and explain the default and localized sync setup.
+Use absolute public links in these descriptions
 so they work on Greasy Fork. Prefer readable Markdown for these descriptions.
 The default additional information follows the script's default locale:
 for an English-default script, use the English file in the default entry and
@@ -130,10 +135,10 @@ configure that setting.
 
 | Change | Required maintenance |
 | --- | --- |
-| Add a script | Create its directory, matching `.user.js`, and both READMEs; add its entry to both root indexes. |
+| Add a script | Create its directory, matching `.user.js`, both READMEs, and both Greasy Fork description Markdown files; document the description sync sources and add its entry to both root indexes. |
 | Delete a script | Remove its entries from both root indexes and clean up broken documentation links. |
 | Rename a script | Update directory, entry filename, links, and documentation references together. Assess installed copies and update mechanisms; obtain confirmation before changing published identifiers or URLs that may disrupt updates. |
-| Change functionality | Check and update both script READMEs, root descriptions, and metadata where affected. |
+| Change functionality | Check and update both script READMEs, both Greasy Fork descriptions, root descriptions, and metadata where affected. |
 | Change a license | Update affected bilingual READMEs and metadata; check whether a separate `LICENSE` is required. Never change third-party licensing without confirmation. |
 
 Any code change that affects documentation accuracy requires a documentation
@@ -212,6 +217,9 @@ These conventions do not require commit tooling or dependencies.
 - [ ] Metadata matches behavior and requests only necessary scope/permissions.
 - [ ] Licenses, copyright, and third-party attribution are accurate.
 - [ ] English and Simplified Chinese READMEs are synchronized where affected.
+- [ ] Each script has both Greasy Fork description Markdown files, aligned with
+  its READMEs, using absolute public links without language-switching links;
+  both READMEs document the Raw sources and default/localized Markdown sync setup.
 - [ ] Both root indexes list exactly the actual scripts, with correct directory,
   Raw, and verified public Greasy Fork links (or localized unpublished status).
 - [ ] Documentation and installation links point to the intended files.
