@@ -48,6 +48,24 @@ the default documentation language; Simplified Chinese is maintained alongside i
   sensitive data carefully. Never commit keys, tokens, cookies, or credentials.
 - These are defaults; document justified exceptions for a script's actual needs.
 
+### String Quotes
+
+- Use double quotes for ordinary JavaScript and TypeScript strings, including
+  import/export module specifiers.
+- Allow single quotes when they reduce escaping and improve readability, such
+  as a CSS selector containing double-quoted attribute values.
+- Use template literals for interpolation or multiline strings. Do not use
+  backticks for ordinary strings without either need.
+- Apply these rules to new and modified code. Avoid unrelated quote-only
+  changes across existing scripts, and preserve string values and behavior.
+
+```js
+const name = "CycleDM";
+const message = "It's ready.";
+const selector = 'a[data-state="active"]';
+const greeting = `Hello, ${name}!`;
+```
+
 ### Metadata and Source Notices
 
 Every entry file must begin with a standard `// ==UserScript==` metadata block
