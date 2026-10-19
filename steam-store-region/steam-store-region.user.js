@@ -2,7 +2,7 @@
 // @name         Steam Store Region
 // @name:zh-CN   Steam 商店区域切换
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.1.0
+// @version      0.1.1
 // @description  Default signed-out Steam storefront pages to China, with China, Hong Kong, Japan, US, and Default (no rewriting) controls.
 // @description:zh-CN 为未登录的 Steam 商店网页默认添加国区参数，提供国区、港区、日区、美区和默认（不改写）按钮。
 // @author       CycleDM
@@ -99,14 +99,17 @@
         const parts = queryAt < 0 ? [] : base.slice(queryAt + 1).split('&');
         const isCC = part => decodeURIComponent(part.split('=')[0].replace(/\+/g, ' ')).toLowerCase() === 'cc';
         if (!force && parts.some(isCC)) return null;
+        if (region === 'off' && !parts.some(isCC)) return null;
         const kept = force ? parts.filter(part => !isCC(part)) : parts;
         const prefix = queryAt < 0 ? base : base.slice(0, queryAt);
         const query = kept.join('&');
+        if (region === 'off') return prefix + (query ? '?' + query : '') + hash;
         return prefix + '?' + query + (query && !query.endsWith('&') ? '&' : '') + 'cc=' + region + hash;
     }
 
     function navigate(force = false) {
-        if (region === 'off' || loginState() !== 'guest') return;
+        if (region === 'off' && !force) return;
+        if (region !== 'off' && loginState() !== 'guest') return;
         try {
             const target = regionURL(force);
             if (!target || target === location.href) return;
@@ -180,7 +183,7 @@
             button.textContent = chinese ? zh : en;
             button.className = 'm-0 cursor-pointer rounded-lg border-0 border-solid bg-slate-700 px-3 py-2 font-sans text-sm font-medium leading-5 text-white hover:bg-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-300 disabled:cursor-default disabled:opacity-50 aria-pressed:bg-sky-700';
             button.title = value === 'off'
-                ? (chinese ? '停止后续改写，保留当前网址' : 'Stop future rewrites; keep the current URL')
+                ? (chinese ? '移除当前网址的 cc 参数并停止后续改写' : 'Remove cc from this URL and stop future rewrites')
                 : (chinese ? '保存区域并重新加载当前页面' : 'Save region and reload this page');
             button.addEventListener('click', () => {
                 if (value !== 'off' && loginState() !== 'guest') { refresh(); return; }

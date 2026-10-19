@@ -12,9 +12,11 @@ with a persistent region switcher.
   Existing values, including empty, encoded, repeated, or case-variant parameter
   names, are preserved. Clicking a region explicitly replaces all `cc` variants
   and reloads the page, preserving other query parameters and fragments.
-- **🌐 Default** stops future rewriting while retaining the current URL,
-  including any existing `cc`. Remove `cc` manually to let Steam choose again;
-  this option does not reset Steam's region cookies.
+- Clicking **🌐 Default** saves the preference, removes all `cc` variants from
+  the current URL, and reloads if needed, preserving other parameters and the
+  fragment. This explicit cleanup works even while login detection pauses region
+  rewriting. Future page loads are left untouched, including links with their
+  own `cc`. This does not reset Steam's region cookies or guarantee a pricing region.
 - Only rewrites when page data or the global login link clearly indicates a
   signed-out visitor. Signed-in or unknown login state pauses rewriting and
   disables region buttons; Default remains available. Detection is best effort

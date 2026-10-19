@@ -25,9 +25,11 @@ Default signed-out Steam storefront pages to China with a persistent region swit
   `cc` values, including empty, encoded, repeated, or case-variant names, take
   precedence. Clicking a region explicitly replaces all `cc` variants and reloads
   the current page. Other query parameters and fragments retain their encoding.
-- **🌐 Default** stops future automatic changes and leaves the current URL, including
-  any existing `cc`, untouched. Remove `cc` manually if you want Steam to choose
-  the current page's region again. It does not reset Steam's own cookies.
+- Clicking **🌐 Default** saves the preference, removes all `cc` variants from
+  the current URL, and reloads if needed, preserving other parameters and the
+  fragment. This explicit cleanup also works while login detection pauses region
+  rewriting. Future page loads are left untouched, including links with their
+  own `cc`. This does not reset Steam's own cookies or guarantee a pricing region.
 - Only acts after the page identifies a signed-out visitor using Steam's
   `data-userinfo` or a login link in the global header. Account UI or signed-in
   data pauses rewriting; unknown state also pauses it. Region buttons are
@@ -111,7 +113,7 @@ and redirect-loop protection. Current public Steam HTML was checked for the
 signed-out `data-userinfo` and global login-link markers; one public `cc=cn`
 product-page request returned `country_code: CN`. A temporary local browser
 preview using simulated manager storage confirmed the toolbar layout, switching
-to `cc=hk`, and preserving the current URL when Default is selected. The collapsible toolbar was
+to `cc=hk`. Default URL cleanup is covered by simulated-browser tests. The collapsible toolbar was
 also checked locally for collapse, expansion, and restoring the collapsed state
 after a reload. This does not prove
 logged-in behavior on a real account or end-to-end compatibility with
