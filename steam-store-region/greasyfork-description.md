@@ -22,11 +22,11 @@ with a persistent region switcher.
   disables region buttons; Default remains available. Detection is best effort
   and may need updating if Steam changes its page structure.
 - Collapse the toolbar to the selected region's flag, or **🌐** for Default.
-  It starts collapsed if there is no valid saved state; existing saved choices
-  are preserved. The collapsed emoji is enlarged and centered in a 44 × 44 px button without
+  Every refresh or full page load starts collapsed; old saved collapse settings
+  are ignored. The collapsed emoji is enlarged and centered in a 44 × 44 px button without
   leftover spacing from hidden controls.
-  Click again to expand. The collapsed state persists independently of the
-  region preference. A 200 ms width/fade transition respects reduced-motion
+  Click again to expand. Only the region preference persists; expanding and
+  collapsing affect the current page only. A 200 ms width/fade transition respects reduced-motion
   settings. Collapsing does not stop rewriting. The flag and highlighted region
   reflect the saved preference, not proof of Steam's actual pricing region.
 - On viewports below 640 px, options open vertically upward from the bottom-right

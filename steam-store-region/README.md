@@ -15,13 +15,12 @@ Default signed-out Steam storefront pages to China with a persistent region swit
   storage. Other open tabs read it on their next page load.
 - The toolbar's right-hand button collapses it to the selected region's flag
   (**🇨🇳**, **🇭🇰**, **🇯🇵**, or **🇺🇸**); **Default** displays **🌐**.
-  It starts collapsed when no valid saved state exists; an existing saved
-  expanded/collapsed preference is preserved.
+  Every full page load or refresh starts collapsed. Expanding or collapsing
+  affects only the current page; old saved collapse preferences are ignored.
   The collapsed icon is enlarged and centered in a 44 × 44 px button with no
   leftover spacing from the hidden controls.
   The icon reflects the saved preference, not Steam's actual pricing region.
-  Click it again to expand. The state is saved separately from the region
-  preference and restored on future page loads. Collapsing does not disable
+  Click it again to expand. Only the region preference persists. Collapsing does not disable
   region rewriting. Width and opacity animate over 200 ms; the system's
   reduced-motion setting disables this animation. Hidden controls are excluded
   from keyboard focus and accessibility navigation while collapsed.
@@ -92,7 +91,7 @@ matching `@name:zh-CN`. Select **Markdown** for both. Do not add a duplicate
 English localization. Configure these two sync URLs separately on Greasy Fork;
 committing the files does not configure synchronization or publish the script.
 
-Only `GM_getValue` and `GM_setValue` are requested, for region and collapse preferences.
+Only `GM_getValue` and `GM_setValue` are requested, for the region preference.
 No cookies or credentials are read, no account identifiers are stored, and no
 external requests are made by the script apart from navigating the storefront.
 
@@ -119,14 +118,15 @@ No repository package manifest or dependency installation is required.
 
 Node's simulated-browser tests cover path boundaries, query preservation,
 preferences, explicit switches, login/unknown-state skipping, storage failures,
-collapse-state persistence and accessibility state,
+collapse reset on page load, storage-independent toggling, and accessibility state,
 and redirect-loop protection. Current public Steam HTML was checked for the
 signed-out `data-userinfo` and global login-link markers; one public `cc=cn`
 product-page request returned `country_code: CN`. A temporary local browser
 preview using simulated manager storage confirmed the toolbar layout, switching
 to `cc=hk`. Default URL cleanup is covered by simulated-browser tests. The collapsible toolbar was
-also checked locally for collapse, expansion, and restoring the collapsed state
-after a reload. Version 0.1.2 was additionally previewed in 320 × 568, 390 × 740,
+also checked locally for collapse and expansion. Version 0.1.3 tests verify
+that each new page starts collapsed and legacy collapse settings are ignored.
+Version 0.1.2 was additionally previewed in 320 × 568, 390 × 740,
 and 568 × 260 px iframe viewports for vertical layout and short-screen scrolling,
 and in a desktop browser for horizontal layout and glass-background readability.
 These are viewport simulations, not physical-phone or iOS safe-area tests. This does not prove

@@ -6,8 +6,7 @@ const source = fs.readFileSync(require('node:path').join(__dirname, '../steam-st
 
 function run({ url = 'https://store.steampowered.com/app/10/', state = 'guest',
     saved = 'cn', storage = new Map(), storageFails = false, saveFails = false,
-    frame = false, info, account = false, header = false, collapsed,
-    collapseReadFails = false } = {}) {
+    frame = false, info, account = false, header = false } = {}) {
     class Element {
         constructor(tag) { this.tag = tag; this.children = []; this.attributes = {}; this.events = {}; }
         append(...children) { this.children.push(...children); }
@@ -32,14 +31,15 @@ function run({ url = 'https://store.steampowered.com/app/10/', state = 'guest',
         addEventListener: (name, handler) => { events[name] = handler; },
     };
     const settings = [];
+    const reads = [];
     const self = {};
     vm.runInNewContext(source, {
         window: { top: frame ? {} : self, self, addEventListener: (name, handler) => { events[name] = handler; } },
         document, location, navigator: { language: 'en' }, URL,
-        GM_getValue: (key, fallback) => {
-            if (key !== 'steam-store-region-collapsed') return saved;
-            if (collapseReadFails) throw Error('blocked');
-            return collapsed === undefined ? fallback : collapsed;
+        GM_getValue: key => {
+            reads.push(key);
+            // Model an old saved expanded state; the new script must ignore it.
+            return key === 'steam-store-region-collapsed' ? false : saved;
         },
         GM_setValue: (key, value) => { if (saveFails) throw Error('blocked'); settings.push([key, value]); },
         sessionStorage: {
@@ -50,7 +50,7 @@ function run({ url = 'https://store.steampowered.com/app/10/', state = 'guest',
     const panel = body.children[0]?.shadowRoot.children[1];
     const collapsible = panel?.children[0];
     const controls = collapsible?.children[0].children[0];
-    return { navigations, settings, events, panel, controls, collapsible,
+    return { navigations, settings, reads, events, panel, controls, collapsible,
         toggle: panel?.children[1], buttons: controls?.children.slice(1), storage };
 }
 
@@ -192,53 +192,59 @@ test('Tailwind utilities are embedded, isolated, and require no remote runtime',
     assert.doesNotMatch(source, /@require|createElement\(['"]script|cdn\.jsdelivr/);
 });
 
-test('saved expanded toolbar persists collapse/expand independently of region', () => {
-    const result = run({ saved: 'off', collapsed: false });
+test('each new page starts collapsed even after expanding the previous page', () => {
+    const result = run({ saved: 'off' });
+    assert.equal(result.toggle.attributes['aria-expanded'], 'false');
+    result.toggle.events.click();
     assert.equal(result.toggle.attributes['aria-expanded'], 'true');
+    assert.equal(result.collapsible.inert, false);
+    assert.equal(result.collapsible.attributes['aria-hidden'], 'false');
+    const reloaded = run({ saved: 'off' });
+    assert.equal(reloaded.toggle.attributes['aria-expanded'], 'false');
+    assert.equal(reloaded.collapsible.inert, true);
+    assert.equal(reloaded.collapsible.attributes['aria-hidden'], 'true');
     result.toggle.events.click();
     assert.equal(result.toggle.attributes['aria-expanded'], 'false');
-    assert.equal(result.collapsible.inert, true);
-    assert.equal(result.collapsible.attributes['aria-hidden'], 'true');
     assert.equal(result.toggle.textContent, '🌐');
-    assert.deepEqual(result.settings, [['steam-store-region-collapsed', true]]);
-    result.toggle.events.click();
-    assert.equal(result.collapsible.inert, false);
-    assert.equal(result.toggle.attributes['aria-expanded'], 'true');
-    assert.deepEqual(result.settings[1], ['steam-store-region-collapsed', false]);
+    assert.deepEqual(result.settings, []);
     assert.deepEqual(result.navigations, []);
 });
 
-test('saved collapsed state restores while region rewriting remains active', () => {
+test('collapsed flags reflect the saved region and rewriting remains active', () => {
     for (const [saved, flag] of [['cn', '🇨🇳'], ['hk', '🇭🇰'], ['jp', '🇯🇵'], ['us', '🇺🇸'], ['off', '🌐']]) {
-        const restored = run({ collapsed: true, saved });
+        const restored = run({ saved });
         assert.equal(restored.toggle.textContent, flag);
         restored.toggle.events.click();
         restored.buttons[1].events.click();
         restored.toggle.events.click();
         assert.equal(restored.toggle.textContent, '🇭🇰');
     }
-    const result = run({ collapsed: true, saved: 'jp' });
+    const result = run({ saved: 'jp' });
     assert.equal(result.toggle.attributes['aria-expanded'], 'false');
     assert.equal(result.collapsible.inert, true);
     assert.equal(result.navigations[0], 'https://store.steampowered.com/app/10/?cc=jp');
     assert.match(source, /prefers-reduced-motion/);
 });
 
-test('failed collapse-state save keeps the toolbar expanded', () => {
-    const result = run({ saveFails: true, collapsed: false });
+test('collapse toggle works without writing settings, even if writes are blocked', () => {
+    const result = run({ saveFails: true });
     result.toggle.events.click();
     assert.equal(result.toggle.attributes['aria-expanded'], 'true');
     assert.equal(result.collapsible.inert, false);
-    assert.equal(result.toggle.title, '无法保存折叠状态');
+    result.toggle.events.click();
+    assert.equal(result.toggle.attributes['aria-expanded'], 'false');
+    assert.equal(result.collapsible.inert, true);
+    assert.deepEqual(result.settings, []);
 });
 
-test('new installs and invalid or unreadable collapse preferences start collapsed', () => {
-    for (const settings of [{}, { collapsed: null }, { collapsed: 'false' }, { collapseReadFails: true }]) {
-        const result = run({ ...settings, saved: 'off' });
-        assert.equal(result.toggle.attributes['aria-expanded'], 'false');
-        assert.equal(result.collapsible.inert, true);
-        result.toggle.events.click();
-        assert.equal(result.toggle.attributes['aria-expanded'], 'true');
-        assert.deepEqual(result.settings, [['steam-store-region-collapsed', false]]);
-    }
+test('only region preference persists; legacy collapse state is never read or written', () => {
+    const result = run({ url: 'https://store.steampowered.com/?cc=cn' });
+    assert.deepEqual(result.reads, ['steam-store-region']);
+    assert.equal(result.toggle.attributes['aria-expanded'], 'false');
+    result.toggle.events.click();
+    result.buttons[2].events.click();
+    assert.deepEqual(result.settings, [['steam-store-region', 'jp']]);
+    const reloaded = run({ saved: 'jp' });
+    assert.equal(reloaded.toggle.attributes['aria-expanded'], 'false');
+    assert.equal(reloaded.toggle.textContent, '🇯🇵');
 });
