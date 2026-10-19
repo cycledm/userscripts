@@ -78,6 +78,15 @@ from the verified `main` branch.
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->
 
+The metadata links to the source directory and the repository's issue tracker.
+For Greasy Fork's additional-information sync, use the English
+[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)
+and the Simplified Chinese
+[description source](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md).
+These use absolute links suitable for display outside GitHub. Configure each
+language's additional-information sync URL in Greasy Fork's script management
+page; adding files to this repository does not configure that setting for you.
+
 The transition uses online [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)
 (`@tailwindcss/browser@4` from jsDelivr), plus complete local fallback CSS.
 Tailwind describes this runtime as intended for development. It is used here

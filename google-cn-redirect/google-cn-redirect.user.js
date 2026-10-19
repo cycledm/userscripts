@@ -2,11 +2,13 @@
 // @name         Google CN Redirect
 // @name:zh-CN   Google 中国域名跳转
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.1.0
+// @version      0.1.1
 // @description  Redirect google.cn to google.com with selected search parameters and a system-themed transition page; optionally sync Search's theme.
 // @description:zh-CN 将 google.cn 跳转到 google.com，保留必要搜索参数，提供跟随系统主题的过渡页，并可同步搜索页主题。
 // @author       CycleDM
 // @license      GPL-3.0-or-later
+// @homepageURL  https://github.com/cycledm/userscripts/tree/main/google-cn-redirect
+// @supportURL   https://github.com/cycledm/userscripts/issues
 // @match        *://google.cn/*
 // @match        *://www.google.cn/*
 // @match        https://www.google.com/search*

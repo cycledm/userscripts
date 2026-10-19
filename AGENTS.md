@@ -113,6 +113,13 @@ published on Greasy Fork or its public listing changes, update both indexes
 and any affected script documentation. Do not publish externally merely to
 populate an index link; publication requires authorization.
 
+If a script provides `greasyfork-description.md` and
+`greasyfork-description-zh-cn.md`, keep both aligned with its bilingual READMEs
+when behavior or usage changes. Use absolute public links in these descriptions
+so they work on Greasy Fork. Their additional-information sync URLs must be
+configured separately on Greasy Fork; committing the files does not configure
+that setting.
+
 | Change | Required maintenance |
 | --- | --- |
 | Add a script | Create its directory, matching `.user.js`, and both READMEs; add its entry to both root indexes. |

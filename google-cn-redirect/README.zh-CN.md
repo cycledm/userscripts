@@ -45,6 +45,8 @@
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->
 
+元数据已提供源码目录和仓库问题反馈链接。Greasy Fork 的附加说明可分别使用[英文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description.md)和[简体中文说明源](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/greasyfork-description-zh-cn.md)同步；其中使用适合在 GitHub 之外展示的绝对链接。请在 Greasy Fork 的脚本管理页面为对应语言配置附加说明同步 URL；仅向本仓库添加文件不会自动配置该设置。
+
 过渡页使用在线 [Tailwind Play CDN](https://tailwindcss.com/docs/installation/play-cdn)（jsDelivr 的 `@tailwindcss/browser@4`），并提供完整的本地兜底 CSS。Tailwind 官方将此运行时定位为开发用途；此处为满足在线 Tailwind 的需求采用它，不引入构建工具。CDN 失败或被页面 CSP 限制时，兜底样式仍可用，且不影响导航时机。CDN 会在 `.cn` 过渡页运行第三方 JavaScript；页面不展示搜索内容，资源请求使用 `no-referrer`，不加载外部 Logo 或字体。
 
 ## 验证
