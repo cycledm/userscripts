@@ -63,17 +63,20 @@ and **cycledm** for GitHub URLs: `https://github.com/cycledm/userscripts`.
 - Standalone pages follow system light/dark preferences. Embedded widgets match
   the host website; fixed-theme websites keep that theme regardless of system
   settings. Follow host theme changes only when supported by the site.
-- Prefer utilities; use custom CSS for animation, states, isolation, or fallbacks
-  when clearer. Scope styles to owned elements or Shadow DOM. Keep resets and
-  shared classes from affecting the host page.
+- Prefer canonical Tailwind named/numeric utilities and variable shorthand over
+  equivalent arbitrary values. Check changed classes for `suggestCanonicalClasses`
+  fixes; do not disable diagnostics or add tooling. Preserve computed styles under
+  the actual theme, spacing scale, and root font size; retain necessary arbitrary
+  values. Use custom CSS where clearer; scope styles to owned elements or Shadow
+  DOM, without resetting the host page.
 - Choose delivery by environment: self-owned pages may use the browser CDN with
   complete local fallback CSS; persistent widgets may embed precompiled CSS.
   Do not add or replace build/runtime machinery merely for uniformity.
 - Navigation and core behavior must not wait for styles, CDN loading, or animation.
   Avoid unstyled flashes and layout shifts. Support narrow screens, keyboard
   focus, reduced motion, and applicable blur/transparency fallbacks.
-- Check affected layouts, states, themes, and blocked-CDN behavior. Document
-  runtime/compiler versions and rebuild steps where relevant.
+- Check affected layouts, states, themes, and CDN failures; document relevant
+  versions and rebuild steps.
 
 ## Icons
 
