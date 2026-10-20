@@ -250,6 +250,11 @@ test("Tailwind utilities are embedded, isolated, and require no remote runtime",
     assert.ok(result.panel.className.includes("fixed"));
     assert.match(source, /\.fixed\{position:fixed\}/);
     assert.match(source, /:host\{all:initial\}/);
+    assert.match(source, /tailwindcss v4\.3\.3/);
+    assert.match(source, /color-scheme:dark/);
+    assert.doesNotMatch(source, /prefers-color-scheme/);
+    assert.match(source, /prefers-reduced-transparency:reduce/);
+    assert.doesNotMatch(source, /@property|--tw-|:root|@layer base/);
     assert.doesNotMatch(source, /@require|createElement\(['"]script|cdn\.jsdelivr/);
 });
 

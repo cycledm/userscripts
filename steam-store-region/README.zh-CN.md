@@ -35,9 +35,13 @@
 展开约 0.6 秒，折叠约 0.36 秒；CSS 过渡可在中途反向，遵循系统“减少动态效果”设置，关闭位移和延迟。
 折叠控件禁用交互，不进入辅助功能导航。
 
-提高透光程度的深色毛玻璃表面使用 24 像素模糊与饱和度增强，搭配更深的按钮底色、白色文字和轻微文字
-阴影保证对比度。不支持模糊时使用更高不透明度背景，支持系统“减少透明度”时改用不透明背景。
-样式由 Tailwind CSS 3.4.17 预编译，通过 Shadow DOM 隔离；运行时无需 CDN、外部字体或下载编译器。
+工具栏始终采用与 Steam 一致的深色，即使系统偏好浅色也不切换。克制的蓝色选中态、统一的 14 像素
+系统字体和 4 像素间距保持清晰层级。毛玻璃使用 24 像素模糊，较深的按钮背景保持文字对比度；不支持
+模糊或偏好“减少透明度”时使用不透明背景。
+
+样式由 Tailwind CSS **4.3.3** 预编译并内嵌于 Shadow DOM。仅导入工具层，使用内联主题值和组件内显式
+重置，Preflight 不影响 Steam。文字、边框和阴影不依赖宿主页主题变量或 Shadow DOM 中的 `@property`
+注册。运行时无需 CDN、外部字体或下载编译器。
 
 ## 范围与限制
 
@@ -75,7 +79,8 @@ Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601020)
 
 ## 开发与验证
 
-修改工具类或 `src/tailwind.css` 后重新编译内嵌 CSS：
+修改 `src/tailwind.css` 后重新编译内嵌 CSS。若在 JavaScript 中新增独立工具类，也需加入样式中的
+`@source inline(...)` 显式列表（目前仅 `fixed`）：
 
 ```sh
 python3 steam-store-region/src/build-styles.py
@@ -83,11 +88,13 @@ node --check steam-store-region/steam-store-region.user.js
 node --test steam-store-region/tests/region.test.cjs
 ```
 
-编译需要 Python 3、Node.js/npm，以及访问 npm 下载固定版本 Tailwind CLI 的网络或已有缓存；安装和使用
-脚本无需这些工具，无需仓库级包清单。
+编译需要 Python 3、Node.js/npm，以及访问 npm 下载 `@tailwindcss/cli@4.3.3` 和 `tailwindcss@4.3.3`
+的网络或已有缓存；安装和使用脚本无需这些工具，也无需仓库级包清单。导入从 npm exec 的临时包缓存
+解析；`@source` 关闭自动工作区扫描，避免旧内嵌 CSS 反过来影响下次构建，相同源码可复现相同输出。
 
 模拟浏览器测试覆盖已登录时直接退出、后续检测到登录时隐藏控件、保存偏好优先级、仅手动写入偏好、网址保留、“自动”清理、
-防循环及折叠辅助功能状态。本地浏览器预览检查响应式布局和动画；这些检查不证明真实账号价格变化，
+防循环及折叠辅助功能状态。本地 Chromium 预览检查桌面/手机布局、展开/折叠、浅色/深色预览背景上的深色控件、键盘焦点，以及模拟的
+减少动态效果/透明度媒体条件；预览覆盖不改变系统偏好。这些检查不证明真实账号价格变化，
 或 Tampermonkey、Violentmonkey、手机实机、Safari/iOS 的端到端行为。
 
 ## 许可证

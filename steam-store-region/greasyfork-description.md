@@ -38,11 +38,13 @@ including links with their own `cc`. Steam cookies are not reset.
   and light spring-like overshoot; closing reverses the order toward the anchor.
   Opening takes about 0.6 seconds and closing about 0.36 seconds. Reduced-motion
   preferences remove movement and delays; collapsed controls are inert.
-- A more transparent dark glass surface uses 24 px blur and enhanced saturation.
-  Darker button surfaces, white text and subtle text shadows protect readability.
-  Unsupported blur uses a higher-opacity fallback; supported reduced-transparency
-  preferences use an opaque background. Precompiled Tailwind styles are isolated
-  in Shadow DOM; no runtime CDN, external font or compiler is downloaded.
+- The toolbar stays dark to match Steam, regardless of the system light/dark
+  preference. Consistent system typography, compact spacing and a restrained blue
+  selection keep controls clear. A 24 px glass blur and darker buttons preserve
+  contrast; unsupported blur and reduced-transparency preferences use an opaque surface.
+- Tailwind CSS **4.3.3** is precompiled into Shadow DOM with inline theme values,
+  no document-wide Preflight and no reliance on shadow-tree `@property` registration.
+  No runtime CDN, external font or compiler is downloaded.
 
 ## Scope and limitations
 
@@ -71,8 +73,9 @@ or credentials are read, no account identifiers are stored, and no external
 requests are made apart from storefront navigation.
 
 Simulated tests cover signed-in early exit, hidden controls after login, saved-choice priority, manual-only
-preference writes, URL handling and collapse behavior. Local browser previews
-check responsive layout and motion; these do not prove actual account prices or
+preference writes, URL handling and collapse behavior. Local Chromium previews
+check desktop/phone layout, dark controls on light/dark fixture backgrounds, focus
+and simulated reduced-motion/reduced-transparency media conditions; these do not prove actual account prices or
 end-to-end userscript-manager, physical-phone or Safari/iOS compatibility.
 
 [Source and full usage notes](https://github.com/cycledm/userscripts/tree/main/steam-store-region)

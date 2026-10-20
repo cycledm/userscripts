@@ -49,11 +49,17 @@ Opening takes about 0.6 seconds; closing takes about 0.36 seconds. CSS transitio
 can reverse mid-animation; reduced-motion preferences remove movement and delays.
 Collapsed controls are inert and excluded from accessibility navigation.
 
-The more transparent dark glass surface uses 24 px blur and saturation, while
-darker button backgrounds, white labels and subtle text shadows preserve contrast.
-Unsupported blur uses a higher-opacity background; supported reduced-transparency
-preferences use an opaque surface. Styles are precompiled Tailwind CSS 3.4.17 in
-Shadow DOM. No runtime CDN, external font or downloaded compiler is used.
+The toolbar stays dark to match Steam, even when the system prefers light mode.
+A restrained blue selection, consistent 14 px system typography and 4 px spacing
+keep the hierarchy clear. The glass surface uses 24 px blur; darker button
+backgrounds protect text contrast. Unsupported blur and reduced-transparency
+preferences use an opaque surface.
+
+Styles are precompiled with Tailwind CSS **4.3.3** and embedded in Shadow DOM.
+Only the utility layer is imported, with inline theme values and an explicit
+component reset; Preflight never touches Steam. Text, borders and shadows avoid
+reliance on document theme variables or shadow-tree `@property` registration.
+No runtime CDN, external font or downloaded compiler is used on the page.
 
 ## Scope and limitations
 
@@ -101,7 +107,9 @@ external requests apart from storefront navigation.
 
 ## Development and validation
 
-After changing utility classes or `src/tailwind.css`, rebuild the embedded CSS:
+After changing `src/tailwind.css`, rebuild the embedded CSS. If adding standalone
+utility classes in JavaScript, also add them to the stylesheet's explicit
+`@source inline(...)` list (currently only `fixed`):
 
 ```sh
 python3 steam-store-region/src/build-styles.py
@@ -110,13 +118,18 @@ node --test steam-store-region/tests/region.test.cjs
 ```
 
 Rebuilding needs Python 3, Node.js/npm, and npm access or a populated cache for the
-pinned Tailwind CLI. Installing and using the script needs none of these tools.
-No repository package manifest is required.
+pinned `@tailwindcss/cli@4.3.3` and `tailwindcss@4.3.3` packages. Installing and using the script needs none of these tools.
+No repository package manifest is required. Imports are resolved from npm exec's
+temporary package cache; `@source` disables automatic workspace scanning so the
+previous generated CSS cannot feed back into the next build. Rebuilding the same
+source produces identical output.
 
 Simulated-browser tests cover signed-in early exit and hidden controls after login,
 stored-choice precedence, manual-only preference writes, URL preservation, Auto cleanup,
-loop protection and collapse accessibility. Local browser previews exercise
-responsive layout and animation. These do not prove real-account price changes
+loop protection and collapse accessibility. Local Chromium previews exercise desktop/phone layouts, open/closed states, dark
+controls on light/dark fixture backgrounds, keyboard focus and simulated
+reduced-motion/reduced-transparency media conditions. Fixture overrides are not
+OS preference changes. These do not prove real-account price changes
 or end-to-end Tampermonkey, Violentmonkey, physical-phone or Safari/iOS behavior.
 
 ## License
