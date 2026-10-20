@@ -2,9 +2,9 @@
 // @name         Google CN Redirect
 // @name:zh-CN   Google 中国域名跳转
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.1.4
-// @description  Redirect google.cn to google.com with selected search parameters and a system-themed transition page; optionally sync Search's theme.
-// @description:zh-CN 将 google.cn 跳转到 google.com，保留必要搜索参数，提供跟随系统主题的过渡页，并可同步搜索页主题。
+// @version      0.1.5
+// @description  Redirect google.cn to google.com with selected search parameters and a system-themed transition page.
+// @description:zh-CN 将 google.cn 跳转到 google.com，保留必要搜索参数，提供跟随系统主题的过渡页。
 // @author       CycleDM
 // @license      GPL-3.0-or-later
 // @homepageURL  https://github.com/cycledm/userscripts/tree/main/google-cn-redirect
@@ -13,7 +13,6 @@
 // @icon64        data:image/png;base64,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
 // @match        *://google.cn/*
 // @match        *://www.google.cn/*
-// @match        https://www.google.com/search*
 // @run-at       document-start
 // @noframes
 // @grant        none
@@ -27,10 +26,8 @@
 (() => {
     "use strict";
 
-    // Experimental: use Google's cs parameter to request the system theme.
-    // Set to false to leave google.com and Google's appearance preference alone.
-    const SYNC_SYSTEM_THEME = true;
     const TAILWIND_CDN = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
+    const TRANSITION_ICON = "data:image/png;base64,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";
     const SEARCH_PARAMETERS = [
         "q", "client",
         "hl", "lr", "gl", "cr", // Language and region.
@@ -41,15 +38,7 @@
         "as_rights", "as_qdr", "as_nlo", "as_nhi", // Advanced search.
     ];
     const source = new URL(location.href);
-    const isChinaHost = ["google.cn", "www.google.cn"].includes(source.hostname);
-    const theme = typeof matchMedia === "function"
-        ? matchMedia("(prefers-color-scheme: dark)") : null;
-
-    function setThemeParameter(url) {
-        if (SYNC_SYSTEM_THEME && theme) {
-            url.searchParams.set("cs", theme.matches ? "1" : "0");
-        }
-    }
+    if (!["google.cn", "www.google.cn"].includes(source.hostname)) return;
 
     function redirectTarget(url) {
         // Home-page queries also become searches. Other paths retain their path,
@@ -62,9 +51,6 @@
             if (url.searchParams.has(key)) {
                 target.searchParams.set(key, url.searchParams.get(key));
             }
-        }
-        if (target.pathname === "/search" || target.pathname === "/search/") {
-            setThemeParameter(target);
         }
         return target;
     }
@@ -86,11 +72,12 @@
         viewport.name = "viewport";
         viewport.content = "width=device-width, initial-scale=1";
         const style = document.createElement("style");
-        // A complete offline fallback; Tailwind utilities can enhance it later.
+        // Keep final geometry and typography identical with or without Tailwind.
         style.textContent = `
-            @layer theme, base, redirect-fallback, components, utilities;
+            @layer theme, base, components, utilities, redirect-fallback;
             @layer redirect-fallback {
-                :root { color-scheme: light dark; --bg: #f5f7fc; --card: #ffffff;
+                :root { color-scheme: light dark; line-height: 1.5; -webkit-text-size-adjust: 100%;
+                    --bg: #f5f7fc; --card: #ffffff;
                     --ink: #182235; --muted: #657189; --line: #dde5f2; --accent: #2563eb; }
                 @media (prefers-color-scheme: dark) {
                     :root { --bg: #10141c; --card: #191f2b; --ink: #edf2fc;
@@ -99,45 +86,49 @@
                 * { box-sizing: border-box; }
                 body { margin: 0; min-height: 100vh; min-height: 100dvh; display: grid;
                     place-items: center; padding: 24px; background: var(--bg);
-                    color: var(--ink); font-family: system-ui, -apple-system, sans-serif; }
+                    color: var(--ink); font-family: system-ui, -apple-system, sans-serif;
+                    font-weight: 400; letter-spacing: normal; }
                 main { width: 100%; max-width: 440px; padding: 40px 28px; text-align: center;
                     border: 1px solid var(--line); border-radius: 28px; background: var(--card);
                     box-shadow: 0 24px 80px #0000000a; }
                 .route { display: flex; align-items: center; justify-content: center; gap: 12px;
-                    color: var(--muted); font-size: 13px; letter-spacing: .025em; }
+                    margin: 12px 0 28px; color: var(--muted); font-size: 13px;
+                    line-height: 20px; letter-spacing: .025em; }
                 .destination { color: var(--ink); font-weight: 650; }
-                .indicator { margin: 32px auto 24px; width: 52px; height: 52px;
-                    display: grid; place-items: center; border-radius: 50%;
+                .indicator { position: relative; margin: 0 auto 24px; width: 52px; height: 52px;
+                    display: grid; place-items: center; }
+                .indicator::before { content: ""; position: absolute; inset: 0; border-radius: 50%;
                     border: 2px solid var(--line); border-top-color: var(--accent);
                     animation: orbit 1.2s linear infinite; }
-                h1 { margin: 0; font-size: 24px; font-weight: 650; letter-spacing: -.035em; }
-                p { margin: 12px 0 28px; color: var(--muted); font-size: 14px; line-height: 1.7; }
-                a { display: inline-block; padding: 10px 18px; border: 1px solid var(--line);
-                    border-radius: 12px; color: var(--accent); font-size: 14px; text-decoration: none; }
+                .indicator img { display: block; width: 28px; height: 28px; object-fit: contain; }
+                h1 { margin: 0; font-size: 24px; font-weight: 650; line-height: 32px;
+                    letter-spacing: -.035em; }
+                a { display: inline-flex; padding: 10px 18px; border: 1px solid var(--line);
+                    border-radius: 12px; color: var(--accent); font-size: 14px; font-weight: 500;
+                    line-height: 20px; text-decoration: none; transition: color .15s, background-color .15s; }
+                a:hover { background: var(--bg); }
                 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
             }
             @keyframes orbit { to { transform: rotate(360deg); } }
-            @media (prefers-reduced-motion: reduce) { .indicator { animation: none; } }
+            @media (prefers-reduced-motion: reduce) { .indicator::before { animation: none; } }
         `;
         head.append(meta, viewport, style);
         document.title = chinese ? "正在前往 Google" : "Continuing to Google";
         // Static markup only: search text and URL parameters are never HTML.
         body.innerHTML = `
             <main class="w-full max-w-md rounded-3xl border border-[var(--line)] bg-[var(--card)] px-7 py-10 text-center shadow-xl shadow-black/5">
+                <div class="indicator" aria-hidden="true"><img alt="" width="28" height="28"></div>
+                <div role="status" aria-live="polite">
+                    <h1 class="text-2xl font-semibold tracking-tight"></h1>
+                </div>
                 <div class="route flex items-center justify-center gap-3 text-sm">
                     <span>google.cn</span><span aria-hidden="true">→</span>
                     <span class="destination font-semibold">google.com</span>
                 </div>
-                <div class="indicator" aria-hidden="true"></div>
-                <div role="status" aria-live="polite">
-                    <h1 class="text-2xl font-semibold tracking-tight"></h1>
-                    <p class="mt-3 mb-7 text-sm leading-7 text-[var(--muted)]"></p>
-                </div>
                 <a class="inline-flex rounded-xl border border-[var(--line)] px-5 py-2.5 text-sm font-medium text-[var(--accent)] transition-colors hover:bg-[var(--bg)]"></a>
             </main>`;
+        body.querySelector(".indicator img").src = TRANSITION_ICON;
         body.querySelector("h1").textContent = chinese ? "正在前往 Google" : "Continuing to Google";
-        body.querySelector("p").textContent = chinese
-            ? "即将打开 google.com，请稍候。" : "Opening google.com. One moment, please.";
         const link = body.querySelector("a");
         link.textContent = chinese ? "立即继续 →" : "Continue now →";
         link.href = target.href;
@@ -149,61 +140,23 @@
         head.append(tailwind);
     }
 
-    if (isChinaHost) {
-        const target = redirectTarget(source);
-        const start = () => {
-            // Even an unexpected rendering error must not break redirection.
-            try {
-                renderTransition(target);
-            } finally {
-                setTimeout(() => location.replace(target.href), 0);
-            }
-        };
-        if (document.documentElement) {
-            start();
-        } else {
-            const observer = new MutationObserver(() => {
-                if (!document.documentElement) return;
-                observer.disconnect();
-                start();
-            });
-            observer.observe(document, { childList: true });
+    const target = redirectTarget(source);
+    const start = () => {
+        // Even an unexpected rendering error must not break redirection.
+        try {
+            renderTransition(target);
+        } finally {
+            setTimeout(() => location.replace(target.href), 0);
         }
-        return;
-    }
-
-    // google.com is matched only for this optional search-theme workaround.
-    if (!SYNC_SYSTEM_THEME || !theme || source.hostname !== "www.google.com"
-        || !["/search", "/search/"].includes(source.pathname)) return;
-
-    let lastSystemTheme = theme.matches;
-    let navigating = false;
-    function syncSearchTheme() {
-        if (navigating || document.visibilityState === "hidden") return;
-        const current = new URL(location.href);
-        if (!["/search", "/search/"].includes(current.pathname)) return;
-        const changed = lastSystemTheme !== theme.matches;
-        lastSystemTheme = theme.matches;
-        // Do not re-add a missing parameter on every load: Google may strip it.
-        // Direct .com visits without cs start syncing on the next system change.
-        if (!changed && !current.searchParams.has("cs")) return;
-        const expected = theme.matches ? "1" : "0";
-        if (current.searchParams.get("cs") === expected) return;
-        current.searchParams.set("cs", expected);
-        // Preserve all existing .com search state. This is not URL cleaning.
-        navigating = true;
-        location.replace(current.href);
-    }
-
-    if (typeof theme.addEventListener === "function") {
-        theme.addEventListener("change", syncSearchTheme);
+    };
+    if (document.documentElement) {
+        start();
     } else {
-        theme.addListener(syncSearchTheme);
+        const observer = new MutationObserver(() => {
+            if (!document.documentElement) return;
+            observer.disconnect();
+            start();
+        });
+        observer.observe(document, { childList: true });
     }
-    document.addEventListener("visibilitychange", syncSearchTheme);
-    window.addEventListener("pageshow", () => {
-        navigating = false;
-        syncSearchTheme();
-    });
-    syncSearchTheme();
 })();

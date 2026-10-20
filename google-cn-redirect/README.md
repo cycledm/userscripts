@@ -18,7 +18,10 @@ and a transition page that follows the system's color scheme.
 - Uses `location.replace` so Back does not return to the redirect page.
   Navigation starts on the next timer tick; no artificial animation delay or
   CDN wait is added. Fast navigation may make the transition barely visible.
-- Shows a compact bilingual card, loading indicator, and manual continue link.
+- Shows a compact bilingual card, a loading ring around a stationary Google G,
+  the domain route below the heading, and a manual continue link. The icon is
+  embedded and needs no image request. Online and fallback styles share the
+  same geometry and typography.
   CSS media queries track the system theme, including changes while waiting;
   reduced-motion preferences disable the animation.
 
@@ -41,30 +44,6 @@ client attribution; it is retained deliberately. The author's requested
 `client=safari` banner behavior has not been independently verified here.
 The script needs a page on which to run; it cannot intercept an earlier HTTP
 server redirect or repair a network error that prevents the page from loading.
-
-## Experimental search-theme sync
-
-Enabled by default; set `SYNC_SYSTEM_THEME` to `false` near the top of the script
-to disable it. No settings storage or GM permissions are needed.
-
-For `.cn` searches, the target receives `cs=1` for dark or `cs=0` for light.
-On `https://www.google.com/search` (also `/search/`), the script listens for
-`prefers-color-scheme` changes and reloads with the appropriate `cs` value.
-Returning to a hidden tab or a cached page also checks for changes. Existing
-`.com` search parameters and fragments are preserved; URL cleaning applies only
-to the `.cn` redirect. No Tailwind or transition UI is loaded on `.com`.
-
-An existing mismatched `cs` is corrected on load. Direct `.com` visits without
-`cs` start syncing on the next system-theme change; missing `cs` is not repeatedly
-re-added on load, avoiding a redirect loop if Google strips it. Theme switching
-reloads results and may interrupt reading or unsubmitted input. This option
-requests the system theme even if Google's appearance setting differs; it does
-not edit account settings, cookies, or apply image-distorting CSS filters.
-
-The `cs` values appear in [Chromium's own URL builder](https://chromium.googlesource.com/chromium/src/+/328fd587ff59399a3c3c6ea2781e2bc52482bc1b%5E%21/).
-This is a best-effort workaround, not a documented Google Search compatibility
-guarantee. Google may ignore it for some layouts, accounts, or browsers.
-Google also provides an [Appearance → Device default setting](https://support.google.com/websearch/answer/2539428?co=GENIE.Platform%3DAndroid&hl=en).
 
 ## Installation and styling
 
@@ -112,13 +91,13 @@ node --test google-cn-redirect/tests/redirect.test.cjs
 ```
 
 Tests exercise URL selection, tracking removal, missing and encoded values,
-theme events, visibility handling, loop prevention, and disabled sync in a
-simulated browser. They do not prove Google server behavior or userscript-manager
-compatibility. Safari/iOS, Tampermonkey, and Violentmonkey end-to-end installation,
-banner suppression, and Google's actual theme response still require testing.
+rendering-failure recovery, delayed document creation, and domain isolation in
+a simulated browser. They do not prove Google server behavior or userscript-manager
+compatibility. End-to-end installation on Safari/iOS, Tampermonkey, and
+Violentmonkey, plus banner suppression, still require testing.
 A temporary local preview was visually checked in the in-app browser with
 Tailwind loaded and with the CDN blocked by CSP. The dark palette was forced
-in that preview; this was not a real system-theme or Google results-page test.
+in that preview; this was not a real system-theme test.
 
 ## License
 
