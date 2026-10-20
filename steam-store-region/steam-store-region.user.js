@@ -11,6 +11,8 @@
 // @license      GPL-3.0-or-later
 // @homepageURL  https://github.com/cycledm/userscripts/tree/main/steam-store-region
 // @supportURL   https://github.com/cycledm/userscripts/issues
+// @updateURL    https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js
+// @downloadURL  https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js
 // @match        https://store.steampowered.com/*
 // @run-at       document-end
 // @noframes

@@ -88,7 +88,9 @@ separately to avoid independent rewrites.
 
 Import [steam-store-region.user.js](steam-store-region.user.js) into your userscript
 manager, or use the [Raw installation link](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js).
-Unpushed local changes are available only by local import until publication.
+Raw installs use the `main` Raw script URL for update checks and downloads.
+Greasy Fork removes these metadata fields from hosted copies, which retain GF updates.
+Automatic updates have not been tested in a userscript manager.
 
 <!-- greasyfork-link:start -->
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601020)

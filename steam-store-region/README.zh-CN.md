@@ -63,7 +63,8 @@
 
 将 [steam-store-region.user.js](steam-store-region.user.js) 导入用户脚本管理器，或使用
 [Raw 安装链接](https://raw.githubusercontent.com/cycledm/userscripts/main/steam-store-region/steam-store-region.user.js)。
-尚未推送的本地修改在发布前只能通过本地导入使用。
+Raw 安装使用 `main` 上的 Raw 脚本地址检查和下载更新；Greasy Fork 会移除托管副本中的这两个元数据
+字段，托管副本继续通过 GF 更新。尚未实测用户脚本管理器的自动更新。
 
 <!-- greasyfork-link:start -->
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601020)
