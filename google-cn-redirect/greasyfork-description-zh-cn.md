@@ -23,4 +23,4 @@
 
 [完整参数列表及使用说明](https://github.com/cycledm/userscripts/blob/main/google-cn-redirect/README.zh-CN.md) · [问题反馈](https://github.com/cycledm/userscripts/issues)
 
-采用 **GPL-3.0-or-later** 许可证。Copyright (C) 2026 CycleDM.
+脚本代码采用 **GPL-3.0-or-later** 许可证。Copyright (C) 2026 CycleDM.

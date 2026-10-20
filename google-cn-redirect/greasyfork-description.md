@@ -41,4 +41,4 @@ workaround. It does not edit Google account preferences or cookies.
 [Full parameter list and usage notes](https://github.com/cycledm/userscripts/blob/main/google-cn-redirect/README.md)
  · [Report an issue](https://github.com/cycledm/userscripts/issues)
 
-Licensed under **GPL-3.0-or-later**. Copyright (C) 2026 CycleDM.
+Script code licensed under **GPL-3.0-or-later**. Copyright (C) 2026 CycleDM.
