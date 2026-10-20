@@ -17,10 +17,9 @@ and a transition page that follows the system's color scheme.
   `sourceid`, `sclient`, `rlz`, `gs_lcrp`, `sca_esv`, and `utm_*`.
 - Uses `location.replace` so Back does not return to the redirect page.
   The source is immediately replaced with a blank, system-themed background
-  before requesting navigation. The full fallback card and CDN load wait
-  150 ms, so fast navigation skips the card; this delay does not postpone
-  the destination request. Content painted before the script starts may
-  still briefly appear.
+  before requesting navigation. The full fallback card is then displayed
+  immediately, without an artificial delay. Navigation does not wait for the
+  card or CDN. Content painted before the script starts may still briefly appear.
 - Shows a compact bilingual card, a loading ring around a stationary Google G,
   the domain route below the heading, and a manual continue link. The icon is
   embedded and needs no image request. Online and fallback styles share the
@@ -100,7 +99,7 @@ node --test google-cn-redirect/tests/redirect.test.cjs
 ```
 
 Tests exercise URL selection, tracking removal, missing and encoded values,
-immediate navigation, delayed fallback rendering, failure recovery, and domain
+navigation-before-render ordering, immediate fallback rendering, failure recovery, and domain
 isolation in a simulated browser. They do not prove Google server behavior or userscript-manager
 compatibility. End-to-end installation on Safari/iOS, Tampermonkey, and
 Violentmonkey, plus banner suppression, still require testing.

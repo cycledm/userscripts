@@ -8,14 +8,16 @@ const source = readFileSync(join(__dirname, "../google-cn-redirect.user.js"), "u
 
 function run(href, options = {}) {
     const callbacks = {};
-    const timers = [];
     const navigations = [];
     const elements = [];
     const actions = [];
     function element(tag) {
         const node = {
             tag, children: [],
-            append(...nodes) { this.children.push(...nodes); },
+            append(...nodes) {
+                this.children.push(...nodes);
+                if (nodes.some(node => node.tag === "script")) actions.push("cdn");
+            },
             replaceChildren(...nodes) {
                 this.children = nodes;
                 if (this.tag === "html") actions.push("cover");
@@ -57,14 +59,12 @@ function run(href, options = {}) {
     const context = {
         URL, location, document, window,
         navigator: { language: options.language || "en-US" },
-        setTimeout: (fn, delay) => timers.push({ fn, delay }),
     };
     let error;
     try { vm.runInNewContext(source, context); } catch (caught) { error = caught; }
     return {
-        callbacks, navigations, actions, timers, document, elements, root, location, error,
-        flush() { while (timers.length) timers.shift().fn(); },
-        target() { this.flush(); return new URL(navigations.at(-1)); },
+        callbacks, navigations, actions, document, elements, root, location, error,
+        target() { return new URL(navigations.at(-1)); },
     };
 }
 
@@ -109,18 +109,14 @@ test("preserves non-search paths and pins the target origin for double-slash pat
 
 test("navigation still happens if rendering fails or Tailwind never loads", () => {
     const broken = run("https://google.cn/search?q=test", { renderError: true });
-    assert.equal(broken.error, undefined);
+    assert.match(broken.error.message, /Render failed/);
     assert.equal(new URL(broken.navigations[0]).hostname, "www.google.com");
-    assert.throws(() => broken.flush(), /Render failed/);
     assert.equal(run("https://google.cn/search?q=test").target().hostname, "www.google.com");
 });
 
-test("navigates immediately without a document root and still creates the delayed manual fallback", () => {
+test("navigates immediately without a document root and still creates the immediate manual fallback", () => {
     const result = run("https://google.cn/?q=test", { noRoot: true });
     assert.equal(result.navigations.length, 1);
-    assert.equal(result.document.documentElement.tag, "html");
-    assert.equal(result.document.documentElement.children[1].innerHTML, undefined);
-    result.flush();
     assert.equal(result.document.documentElement.tag, "html");
     assert.equal(result.elements.findLast(node => node.tag === "body").a.href,
         "https://www.google.com/search?q=test");
@@ -134,7 +130,6 @@ test("does not touch google.com or other hosts, including their search state", (
         "https://example.com/search?q=test",
     ]) {
         const result = run(href);
-        result.flush();
         assert.equal(result.error, undefined);
         assert.equal(result.location.href, href);
         assert.equal(result.navigations.length, 0);
@@ -154,16 +149,12 @@ test("metadata matches only the two China hosts", () => {
     assert.deepEqual(matches, ["*://google.cn/*", "*://www.google.cn/*"]);
 });
 
-test("covers old content before navigation and defers the full card and CDN", () => {
+test("covers old content, requests navigation, and renders the card and CDN without a timer", () => {
     const result = run("https://google.cn/search?q=test");
-    assert.deepEqual(result.actions, ["stop", "cover", "navigate"]);
+    assert.equal(result.error, undefined);
+    assert.deepEqual(result.actions, ["stop", "cover", "navigate", "cover", "cdn"]);
     assert.equal(result.navigations.length, 1);
-    assert.equal(result.root.children[1].tag, "body");
-    assert.equal(result.root.children[1].innerHTML, undefined);
-    assert.equal(result.elements.some(node => node.tag === "script"), false);
-    assert.equal(result.timers[0].delay, 150);
-    result.flush();
-    assert.deepEqual(result.actions, ["stop", "cover", "navigate", "cover"]);
+    assert.ok(result.root.children[1].innerHTML.includes('class="indicator"'));
     assert.equal(result.elements.findLast(node => node.tag === "body").a.href, result.navigations[0]);
 });
 
@@ -173,7 +164,6 @@ test("source-stop failures do not block navigation and navigation failures retai
     assert.equal(stopFailure.target().hostname, "www.google.com");
     const navigationFailure = run("https://google.cn/search?q=test", { navigationError: true });
     assert.match(navigationFailure.error.message, /Navigation failed/);
-    navigationFailure.flush();
     assert.equal(navigationFailure.elements.findLast(node => node.tag === "body").a.href,
         "https://www.google.com/search?q=test");
 });

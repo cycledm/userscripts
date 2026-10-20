@@ -2,7 +2,7 @@
 // @name         Google CN Redirect
 // @name:zh-CN   Google 中国域名跳转
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.2.0
+// @version      0.2.1
 // @description  Redirect google.cn to google.com with selected search parameters and a system-themed transition page.
 // @description:zh-CN 将 google.cn 跳转到 google.com，保留必要搜索参数，提供跟随系统主题的过渡页。
 // @author       CycleDM
@@ -144,16 +144,16 @@
         document.title = chinese ? "正在前往 Google" : "Continuing to Google";
         // Static markup only: search text and URL parameters are never HTML.
         body.innerHTML = `
-            <main class="w-full max-w-[440px] rounded-[28px] border border-[var(--line)] bg-[var(--card)] px-7 py-10 text-center shadow-[0_24px_80px_#0000000a] max-[360px]:px-5 max-[360px]:py-8">
+            <main class="w-full max-w-110 rounded-[28px] border border-(--line) bg-(--card) px-7 py-10 text-center shadow-[0_24px_80px_#0000000a] max-[360px]:px-5 max-[360px]:py-8">
                 <div class="indicator" aria-hidden="true"><img alt="" width="28" height="28"></div>
                 <div role="status" aria-live="polite">
                     <h1 class="text-2xl leading-8 font-[650] tracking-[-.035em]"></h1>
                 </div>
-                <div class="route mt-3 mb-7 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[13px] leading-5 tracking-[.025em]">
+                <div class="route mt-3 mb-7 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[13px] leading-5 tracking-wide">
                     <span>google.cn</span><span aria-hidden="true">→</span>
                     <span class="destination font-[650]">google.com</span>
                 </div>
-                <a class="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--line)] px-[18px] py-2.5 text-sm leading-5 font-medium text-[var(--accent)] transition-colors hover:bg-[var(--bg)] motion-reduce:transition-none"></a>
+                <a class="inline-flex min-h-11 items-center justify-center rounded-xl border border-(--line) px-4.5 py-2.5 text-sm leading-5 font-medium text-(--accent) transition-colors hover:bg-(--bg) motion-reduce:transition-none"></a>
             </main>`;
         body.querySelector(".indicator img").src = TRANSITION_ICON;
         body.querySelector("h1").textContent = chinese ? "正在前往 Google" : "Continuing to Google";
@@ -183,7 +183,7 @@
     try {
         location.replace(target.href);
     } finally {
-        // Fast navigations leave before this fires; slow/failed ones retain a link.
-        setTimeout(() => renderTransition(target), 150);
+        // Show the manual fallback immediately, after requesting navigation.
+        renderTransition(target);
     }
 })();
