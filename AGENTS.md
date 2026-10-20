@@ -1,5 +1,18 @@
 # Repository Guidelines
 
+## Maintaining These Guidelines
+
+- Merge or replace before adding; state each requirement once and remove obsolete
+  rules. Write short, actionable text; distinguish requirements from preferences.
+  Omit decorative wording, hypothetical edge cases, and implementation history.
+- Specify exact names, fields, and commands where needed; abstract shared rules
+  without using individual scripts as normative references.
+- Target about 1,200 words without sacrificing accuracy or requirements. Whenever
+  an edit increases length, immediately review and tighten the file under these
+  standards before finishing.
+- Briefly walk through existing-script and new-script tasks after edits; fix
+  execution ambiguities and stop once clear.
+
 ## Project and Layout
 
 Personal userscripts for learning, research, and everyday use. Scripts are
@@ -29,11 +42,16 @@ and **cycledm** for GitHub URLs: `https://github.com/cycledm/userscripts`.
   `// ==/UserScript==`. Include accurate `@name`, `@description`, `@version`,
   `@namespace`, `@author`, `@license`, `@match`, and `@grant`.
   Defaults: namespace is the repository URL, author is `CycleDM`, license is
-  `GPL-3.0-or-later`. Grant only APIs used, or `none`. Add other metadata only
-  for a purpose; compatibility claims need evidence.
+  `GPL-3.0-or-later`. Grant only APIs used, or `none`; add other metadata only
+  for a purpose.
+- Set `@updateURL` and `@downloadURL` to the script's verified HTTPS GitHub Raw
+  `.user.js` URL on `main`, matching its Raw installation link. Do not pin update
+  URLs to commits or tags. GF strips these fields from hosted copies, which
+  continue updating through GF. Check remote content/version after pushing;
+  do not claim automatic updates were tested without a manager-level check.
 - Increment `@version` for released script changes, not documentation alone.
   Retain `Copyright (C) <year or year range> CycleDM` outside metadata for
-  CycleDM's code. Preserve third-party ownership and notices.
+  CycleDM's code.
 
 ## CSS and UI
 
@@ -54,8 +72,8 @@ and **cycledm** for GitHub URLs: `https://github.com/cycledm/userscripts`.
 - Navigation and core behavior must not wait for styles, CDN loading, or animation.
   Avoid unstyled flashes and layout shifts. Support narrow screens, keyboard
   focus, reduced motion, and applicable blur/transparency fallbacks.
-- Check affected layouts, states, themes, and blocked-CDN behavior when relevant.
-  Document runtime/compiler versions and rebuild steps where useful.
+- Check affected layouts, states, themes, and blocked-CDN behavior. Document
+  runtime/compiler versions and rebuild steps where relevant.
 
 ## Icons
 
@@ -136,7 +154,7 @@ replace its author with CycleDM without permission.
    bilingual documentation, indexes, and links. Exclude credentials, temporary
    files, and unrelated changes.
 3. Run appropriate syntax checks and existing focused tests. For UI changes,
-   check relevant visual states where possible. Report actual results and limits.
+   check relevant visual states where possible.
 4. Commit, push, publish, or create releases only with authorization. A request
    to commit alone does not authorize pushing. Do not force-push or rewrite
    published history without explicit authorization. Report changes, validation,
