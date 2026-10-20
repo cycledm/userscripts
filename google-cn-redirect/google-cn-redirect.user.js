@@ -107,8 +107,8 @@
                 main { width: 100%; max-width: 440px; padding: 40px 28px; text-align: center;
                     border: 1px solid var(--line); border-radius: 28px; background: var(--card);
                     box-shadow: 0 24px 80px #0000000a; }
-                .route { display: flex; align-items: center; justify-content: center; gap: 12px;
-                    margin: 12px 0 28px; color: var(--muted); font-size: 13px;
+                .route { display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+                    column-gap: 12px; row-gap: 4px; margin: 12px 0 28px; color: var(--muted); font-size: 13px;
                     line-height: 20px; letter-spacing: .025em; }
                 .destination { color: var(--ink); font-weight: 650; }
                 .indicator { position: relative; margin: 0 auto 24px; width: 52px; height: 52px;
@@ -119,29 +119,39 @@
                 .indicator img { display: block; width: 28px; height: 28px; object-fit: contain; }
                 h1 { margin: 0; font-size: 24px; font-weight: 650; line-height: 32px;
                     letter-spacing: -.035em; }
-                a { display: inline-flex; padding: 10px 18px; border: 1px solid var(--line);
+                a { display: inline-flex; align-items: center; justify-content: center;
+                    min-height: 44px; padding: 10px 18px; border: 1px solid var(--line);
                     border-radius: 12px; color: var(--accent); font-size: 14px; font-weight: 500;
                     line-height: 20px; text-decoration: none; transition: color .15s, background-color .15s; }
                 a:hover { background: var(--bg); }
                 a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
             }
+            @media (width < 360px) {
+                @layer redirect-fallback {
+                    body { padding: 16px; }
+                    main { padding: 32px 20px; }
+                }
+            }
             @keyframes orbit { to { transform: rotate(360deg); } }
-            @media (prefers-reduced-motion: reduce) { .indicator::before { animation: none; } }
+            @media (prefers-reduced-motion: reduce) {
+                .indicator::before { animation: none; }
+                a { transition: none; }
+            }
         `;
         head.append(meta, viewport, style);
         document.title = chinese ? "正在前往 Google" : "Continuing to Google";
         // Static markup only: search text and URL parameters are never HTML.
         body.innerHTML = `
-            <main class="w-full max-w-md rounded-3xl border border-[var(--line)] bg-[var(--card)] px-7 py-10 text-center shadow-xl shadow-black/5">
+            <main class="w-full max-w-[440px] rounded-[28px] border border-[var(--line)] bg-[var(--card)] px-7 py-10 text-center shadow-[0_24px_80px_#0000000a] max-[360px]:px-5 max-[360px]:py-8">
                 <div class="indicator" aria-hidden="true"><img alt="" width="28" height="28"></div>
                 <div role="status" aria-live="polite">
-                    <h1 class="text-2xl font-semibold tracking-tight"></h1>
+                    <h1 class="text-2xl leading-8 font-[650] tracking-[-.035em]"></h1>
                 </div>
-                <div class="route flex items-center justify-center gap-3 text-sm">
+                <div class="route mt-3 mb-7 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[13px] leading-5 tracking-[.025em]">
                     <span>google.cn</span><span aria-hidden="true">→</span>
-                    <span class="destination font-semibold">google.com</span>
+                    <span class="destination font-[650]">google.com</span>
                 </div>
-                <a class="inline-flex rounded-xl border border-[var(--line)] px-5 py-2.5 text-sm font-medium text-[var(--accent)] transition-colors hover:bg-[var(--bg)]"></a>
+                <a class="inline-flex min-h-11 items-center justify-center rounded-xl border border-[var(--line)] px-[18px] py-2.5 text-sm leading-5 font-medium text-[var(--accent)] transition-colors hover:bg-[var(--bg)] motion-reduce:transition-none"></a>
             </main>`;
         body.querySelector(".indicator img").src = TRANSITION_ICON;
         body.querySelector("h1").textContent = chinese ? "正在前往 Google" : "Continuing to Google";

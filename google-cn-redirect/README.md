@@ -26,7 +26,9 @@ and a transition page that follows the system's color scheme.
   embedded and needs no image request. Online and fallback styles share the
   same geometry and typography.
   CSS media queries track the system theme, including changes while waiting;
-  reduced-motion preferences disable the animation.
+  reduced-motion preferences disable the loading animation and link transitions.
+  Narrow screens use compact padding and a wrapping domain route; the continue
+  link has a visible keyboard-focus outline and a minimum 44 px target height.
 
 Parameters retained from `.cn`:
 
@@ -98,9 +100,13 @@ immediate navigation, delayed fallback rendering, failure recovery, and domain
 isolation in a simulated browser. They do not prove Google server behavior or userscript-manager
 compatibility. End-to-end installation on Safari/iOS, Tampermonkey, and
 Violentmonkey, plus banner suppression, still require testing.
-A temporary local preview was visually checked in the in-app browser with
-Tailwind loaded and with the CDN blocked by CSP. The dark palette was forced
-in that preview; this was not a real system-theme test.
+Local in-app-browser previews covered 320 px and 1280 px widths in light and
+dark palettes, with Tailwind loaded and the CDN blocked by CSP. Sampled geometry,
+typography, and colors matched between CDN states without horizontal overflow.
+Tab focus reached the continue link; reduced-motion previews stopped the loading
+animation and link transitions. Theme and motion media rules were forced in
+these previews; real system-setting changes and installed-manager behavior
+were not tested.
 
 ## License
 

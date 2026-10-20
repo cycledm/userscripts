@@ -11,7 +11,9 @@ theme.
 - Provides a light/dark transition card, a loading ring around an embedded,
   stationary Google G, the domain route below the heading, and a manual continue
   link. Online and fallback styles share the same layout and typography.
-  Reduced-motion preferences disable the animation.
+  Compact spacing and a wrapping domain route support narrow screens. The
+  continue link has visible keyboard focus and a minimum 44 px target height;
+  reduced-motion preferences disable animation and link transitions.
 - Immediately covers the source with a blank background that follows the
   system theme, then requests navigation. The full fallback card and online
   Tailwind load wait 150 ms; navigation does not wait. Content painted before
