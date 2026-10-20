@@ -15,10 +15,11 @@ theme.
   continue link has visible keyboard focus and a minimum 44 px target height;
   reduced-motion preferences disable animation and link transitions.
 - Immediately covers the source with a blank background that follows the
-  system theme, then requests navigation and immediately displays the full
-  fallback card. There is no artificial delay; navigation does not wait for
-  rendering or online Tailwind. Content painted before the script starts may
-  still briefly appear.
+  system theme and builds the full fallback card immediately. A single
+  `setTimeout(..., 0)` requests navigation after document rebuilding finishes,
+  even if rendering fails. It does not wait for online Tailwind or animation;
+  no fixed 150 ms delay is added. Content painted before the script starts
+  may still briefly appear.
 - Replaces the current history entry so Back does not return to the redirect.
 
 ## Scope and limitations

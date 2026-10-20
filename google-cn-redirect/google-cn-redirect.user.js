@@ -2,7 +2,7 @@
 // @name         Google CN Redirect
 // @name:zh-CN   Google 中国域名跳转
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.2.1
+// @version      0.2.2
 // @description  Redirect google.cn to google.com with selected search parameters and a system-themed transition page.
 // @description:zh-CN 将 google.cn 跳转到 google.com，保留必要搜索参数，提供跟随系统主题的过渡页。
 // @author       CycleDM
@@ -181,9 +181,10 @@
         // Covering the source is best effort; navigation still takes priority.
     }
     try {
-        location.replace(target.href);
-    } finally {
-        // Show the manual fallback immediately, after requesting navigation.
         renderTransition(target);
+    } finally {
+        // Let document rebuilding finish before requesting navigation.
+        // Schedule even if rendering fails; never wait for Tailwind or animation.
+        setTimeout(() => location.replace(target.href), 0);
     }
 })();
