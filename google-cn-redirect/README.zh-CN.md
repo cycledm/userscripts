@@ -9,7 +9,7 @@
 - 处理 `google.cn` 和 `www.google.cn` 的 HTTP / HTTPS 顶层页面，不含其他子域名。保留路径；根路径 `/` 带有 `q` 时转为 `/search`，没有查询时前往 `.com` 首页。
 - 保留 `q`（包括空查询）和原有 `client`；缺少其中任何一个都正常跳转，不补写或强制指定 `client`。
 - 使用允许列表，丢弃其他参数及 URL 片段。常见移除项包括 `ved`、`ei`、`sei`、`oq`、`aqs`、`source`、`sourceid`、`sclient`、`rlz`、`gs_lcrp`、`sca_esv`、`utm_*`。
-- 使用 `location.replace`，后退不会再次进入跳转页。在下一个计时器轮次发起导航，不为动画或 CDN 人为延迟；跳转很快时过渡页可能一闪而过。
+- 使用 `location.replace`，后退不会再次进入跳转页。先立即用跟随系统主题的纯色背景替换原页，再请求跳转；150 毫秒后才显示完整兜底卡片及加载 CDN，快速跳转不显示卡片。这 150 毫秒不延迟目标请求；脚本运行前已绘制的内容仍可能短暂出现。
 - 提供简洁卡片、围绕静止 Google G 图标旋转的加载圆环及手动继续链接；域名路线置于标题下方。图标内嵌，无需额外图片请求；CDN 在线与兜底样式保持相同布局及字体。界面根据浏览器语言显示中文或英文。CSS 媒体查询随系统主题实时变化，遵守减少动态效果的系统设置。
 
 从 `.cn` 保留的参数：
@@ -50,7 +50,7 @@ node --check google-cn-redirect/google-cn-redirect.user.js
 node --test google-cn-redirect/tests/redirect.test.cjs
 ```
 
-测试在模拟浏览器中覆盖 URL 选择、跟踪参数移除、缺失及编码参数、渲染失败兜底、文档延迟创建和域名隔离。它们不能证明 Google 服务端行为或脚本管理器兼容性。Safari/iOS、Tampermonkey、Violentmonkey 的端到端安装及横幅抑制仍待实测。
+测试在模拟浏览器中覆盖 URL 选择、跟踪参数移除、缺失及编码参数、立即导航、延迟显示兜底、异常恢复和域名隔离。它们不能证明 Google 服务端行为或脚本管理器兼容性。Safari/iOS、Tampermonkey、Violentmonkey 的端到端安装及横幅抑制仍待实测。
 
 另在应用内浏览器检查了临时本地预览，覆盖 Tailwind 正常加载及被 CSP 阻止两种情况。深色配色通过预览强制启用，未进行真实系统主题切换实测。
 

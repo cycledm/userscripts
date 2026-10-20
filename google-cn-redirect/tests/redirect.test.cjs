@@ -11,11 +11,16 @@ function run(href, options = {}) {
     const timers = [];
     const navigations = [];
     const elements = [];
+    const actions = [];
     function element(tag) {
         const node = {
             tag, children: [],
             append(...nodes) { this.children.push(...nodes); },
-            replaceChildren(...nodes) { this.children = nodes; },
+            replaceChildren(...nodes) {
+                this.children = nodes;
+                if (this.tag === "html") actions.push("cover");
+            },
+            removeAttribute() {},
             querySelector(selector) {
                 if (!this[selector]) this[selector] = element(selector);
                 return this[selector];
@@ -27,32 +32,38 @@ function run(href, options = {}) {
     const root = element("html");
     const document = {
         documentElement: options.noRoot ? null : root,
-        createElement: element,
+        createElement(tag) {
+            if (options.renderError) throw new Error("Render failed");
+            return element(tag);
+        },
         addEventListener: (name, fn) => { callbacks[name] = fn; },
+        appendChild(node) { this.documentElement = node; return node; },
     };
     const location = {
         href,
-        replace: url => navigations.push(url),
+        replace(url) {
+            actions.push("navigate");
+            if (options.navigationError) throw new Error("Navigation failed");
+            navigations.push(url);
+        },
     };
     const window = {
-        stop() { if (options.renderError) throw new Error("Render failed"); },
+        stop() {
+            actions.push("stop");
+            if (options.stopError) throw new Error("Stop failed");
+        },
         addEventListener: (name, fn) => { callbacks[name] = fn; },
     };
     const context = {
         URL, location, document, window,
         navigator: { language: options.language || "en-US" },
-        setTimeout: fn => timers.push(fn),
-        MutationObserver: class {
-            constructor(fn) { callbacks.root = fn; }
-            observe() {}
-            disconnect() { callbacks.disconnected = true; }
-        },
+        setTimeout: (fn, delay) => timers.push({ fn, delay }),
     };
     let error;
     try { vm.runInNewContext(source, context); } catch (caught) { error = caught; }
     return {
-        callbacks, navigations, document, elements, root, location, error,
-        flush() { while (timers.length) timers.shift()(); },
+        callbacks, navigations, actions, timers, document, elements, root, location, error,
+        flush() { while (timers.length) timers.shift().fn(); },
         target() { this.flush(); return new URL(navigations.at(-1)); },
     };
 }
@@ -65,7 +76,7 @@ test("retains exact decoded query/client, drops tracking and fragments, upgrades
     assert.deepEqual([...url.searchParams], [["q", "C++ 中文&<script>"], ["client", "safari"]]);
     assert.equal(url.hash, "");
     assert.equal(result.error, undefined);
-    const body = result.elements.find(node => node.tag === "body");
+    const body = result.elements.findLast(node => node.tag === "body");
     assert.ok(!body.innerHTML.includes("<script>"));
     assert.equal(body.a.href, url.href);
     assert.equal(result.elements.find(node => node.tag === "script").referrerPolicy, "no-referrer");
@@ -98,19 +109,21 @@ test("preserves non-search paths and pins the target origin for double-slash pat
 
 test("navigation still happens if rendering fails or Tailwind never loads", () => {
     const broken = run("https://google.cn/search?q=test", { renderError: true });
-    assert.ok(broken.error);
-    assert.equal(broken.target().hostname, "www.google.com");
+    assert.equal(broken.error, undefined);
+    assert.equal(new URL(broken.navigations[0]).hostname, "www.google.com");
+    assert.throws(() => broken.flush(), /Render failed/);
     assert.equal(run("https://google.cn/search?q=test").target().hostname, "www.google.com");
 });
 
-test("waits for a missing document root and then redirects", () => {
+test("navigates immediately without a document root and still creates the delayed manual fallback", () => {
     const result = run("https://google.cn/?q=test", { noRoot: true });
+    assert.equal(result.navigations.length, 1);
+    assert.equal(result.document.documentElement.tag, "html");
+    assert.equal(result.document.documentElement.children[1].innerHTML, undefined);
     result.flush();
-    assert.equal(result.navigations.length, 0);
-    result.document.documentElement = result.root;
-    result.callbacks.root();
-    assert.equal(result.callbacks.disconnected, true);
-    assert.equal(result.target().pathname, "/search");
+    assert.equal(result.document.documentElement.tag, "html");
+    assert.equal(result.elements.findLast(node => node.tag === "body").a.href,
+        "https://www.google.com/search?q=test");
 });
 
 test("does not touch google.com or other hosts, including their search state", () => {
@@ -139,4 +152,28 @@ test("does not forward or generate search-appearance parameters", () => {
 test("metadata matches only the two China hosts", () => {
     const matches = [...source.matchAll(/^\/\/ @match\s+(\S+)/gm)].map(match => match[1]);
     assert.deepEqual(matches, ["*://google.cn/*", "*://www.google.cn/*"]);
+});
+
+test("covers old content before navigation and defers the full card and CDN", () => {
+    const result = run("https://google.cn/search?q=test");
+    assert.deepEqual(result.actions, ["stop", "cover", "navigate"]);
+    assert.equal(result.navigations.length, 1);
+    assert.equal(result.root.children[1].tag, "body");
+    assert.equal(result.root.children[1].innerHTML, undefined);
+    assert.equal(result.elements.some(node => node.tag === "script"), false);
+    assert.equal(result.timers[0].delay, 150);
+    result.flush();
+    assert.deepEqual(result.actions, ["stop", "cover", "navigate", "cover"]);
+    assert.equal(result.elements.findLast(node => node.tag === "body").a.href, result.navigations[0]);
+});
+
+test("source-stop failures do not block navigation and navigation failures retain a manual link", () => {
+    const stopFailure = run("https://google.cn/search?q=test", { stopError: true });
+    assert.equal(stopFailure.error, undefined);
+    assert.equal(stopFailure.target().hostname, "www.google.com");
+    const navigationFailure = run("https://google.cn/search?q=test", { navigationError: true });
+    assert.match(navigationFailure.error.message, /Navigation failed/);
+    navigationFailure.flush();
+    assert.equal(navigationFailure.elements.findLast(node => node.tag === "body").a.href,
+        "https://www.google.com/search?q=test");
 });

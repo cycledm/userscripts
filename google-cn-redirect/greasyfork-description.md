@@ -12,8 +12,10 @@ theme.
   stationary Google G, the domain route below the heading, and a manual continue
   link. Online and fallback styles share the same layout and typography.
   Reduced-motion preferences disable the animation.
-- Uses online Tailwind with local fallback CSS. Navigation does not wait for
-  the CDN, and there is no artificial animation delay.
+- Immediately covers the source with a blank background that follows the
+  system theme, then requests navigation. The full fallback card and online
+  Tailwind load wait 150 ms; navigation does not wait. Content painted before
+  the script starts may still briefly appear.
 - Replaces the current history entry so Back does not return to the redirect.
 
 ## Scope and limitations

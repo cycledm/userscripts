@@ -2,7 +2,7 @@
 // @name         Google CN Redirect
 // @name:zh-CN   Google 中国域名跳转
 // @namespace    https://github.com/cycledm/userscripts
-// @version      0.1.5
+// @version      0.2.0
 // @description  Redirect google.cn to google.com with selected search parameters and a system-themed transition page.
 // @description:zh-CN 将 google.cn 跳转到 google.com，保留必要搜索参数，提供跟随系统主题的过渡页。
 // @author       CycleDM
@@ -55,14 +55,30 @@
         return target;
     }
 
+    function coverSourcePage() {
+        const root = document.documentElement || document.appendChild(document.createElement("html"));
+        const head = document.createElement("head");
+        const body = document.createElement("body");
+        const style = document.createElement("style");
+        const meta = document.createElement("meta");
+        meta.name = "referrer";
+        meta.content = "no-referrer";
+        style.textContent = `
+            :root { color-scheme: light dark; background: #f5f7fc; }
+            @media (prefers-color-scheme: dark) { :root { background: #10141c; } }
+            body { margin: 0; }
+        `;
+        head.append(meta, style);
+        root.removeAttribute("style");
+        root.replaceChildren(head, body);
+    }
+
     function renderTransition(target) {
-        // Stop the old document before replacing it, so its styles/parser cannot
-        // overwrite the transition. Navigation does not wait for the CDN.
-        window.stop();
+        // Navigation is already pending. Do not call window.stop() here.
         const chinese = /^zh\b/i.test(navigator.language);
         const head = document.createElement("head");
         const body = document.createElement("body");
-        const root = document.documentElement;
+        const root = document.documentElement || document.appendChild(document.createElement("html"));
         root.lang = chinese ? "zh-CN" : "en";
         root.replaceChildren(head, body);
         const meta = document.createElement("meta");
@@ -141,22 +157,21 @@
     }
 
     const target = redirectTarget(source);
-    const start = () => {
-        // Even an unexpected rendering error must not break redirection.
-        try {
-            renderTransition(target);
-        } finally {
-            setTimeout(() => location.replace(target.href), 0);
-        }
-    };
-    if (document.documentElement) {
-        start();
-    } else {
-        const observer = new MutationObserver(() => {
-            if (!document.documentElement) return;
-            observer.disconnect();
-            start();
-        });
-        observer.observe(document, { childList: true });
+    // Stop only the source page, before starting the destination request.
+    try {
+        window.stop();
+    } catch {
+        // A failure to stop the source must not prevent navigation.
+    }
+    try {
+        coverSourcePage();
+    } catch {
+        // Covering the source is best effort; navigation still takes priority.
+    }
+    try {
+        location.replace(target.href);
+    } finally {
+        // Fast navigations leave before this fires; slow/failed ones retain a link.
+        setTimeout(() => renderTransition(target), 150);
     }
 })();
