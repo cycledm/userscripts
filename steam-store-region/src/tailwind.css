@@ -16,7 +16,7 @@
 
 /* The anchor stays 54px square: opening never changes its height or position. */
 .region-panel {
-    @apply z-[2147483647] box-border flex h-[54px] w-[54px] items-center justify-center p-1 font-sans text-[14px];
+    @apply z-2147483647 box-border flex h-13.5 w-13.5 items-center justify-center p-1 font-sans text-[14px];
     line-height: 20px;
     --region-solid: #191f2b;
     --region-glass: rgb(25 31 43 / .62);
@@ -86,7 +86,7 @@
 .region-status { @apply sr-only; }
 
 .region-button, .region-toggle {
-    @apply appearance-none m-0 inline-flex box-border h-[44px] shrink-0 cursor-pointer items-center justify-center rounded-lg font-sans text-[14px];
+    @apply appearance-none m-0 inline-flex box-border h-11 shrink-0 cursor-pointer items-center justify-center rounded-lg font-sans text-[14px];
     line-height: 20px;
     border: 0;
     color: var(--region-ink);
@@ -115,7 +115,7 @@
     transition-delay: calc(var(--order) * 30ms), calc(var(--order) * 30ms), 0s;
 }
 
-.region-toggle { @apply w-[44px] p-0 text-[20px]; line-height: 1; }
+.region-toggle { @apply w-11 p-0 text-[20px]; line-height: 1; }
 .region-icon-horizontal { display: none; }
 .region-icon-vertical { display: inline; }
 .region-button:hover, .region-toggle:hover { background: var(--region-hover); }
