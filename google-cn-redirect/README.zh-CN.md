@@ -31,6 +31,8 @@
 
 打开 [google-cn-redirect.user.js](google-cn-redirect.user.js)，将内容导入用户脚本管理器，并允许脚本访问匹配的网站。也可使用已确认的 `main` 分支上的 [Raw 安装链接](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js)。
 
+Raw 安装的副本使用同一地址检查更新和下载。Greasy Fork 会移除托管副本中的这两个元数据字段，GF 安装的副本继续通过 GF 更新。尚未在脚本管理器中实测自动更新。
+
 <!-- greasyfork-link:start -->
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->

@@ -58,6 +58,10 @@ You can also use the
 [Raw installation URL](https://raw.githubusercontent.com/cycledm/userscripts/main/google-cn-redirect/google-cn-redirect.user.js)
 from the verified `main` branch.
 
+Raw-installed copies use that same URL for update checks and downloads.
+Greasy Fork removes these metadata fields from hosted copies, which continue
+updating through Greasy Fork. Automatic updates have not been tested in a manager.
+
 <!-- greasyfork-link:start -->
 Greasy Fork: [Greasy Fork](https://greasyfork.org/scripts/601010)
 <!-- greasyfork-link:end -->
