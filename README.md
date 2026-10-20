@@ -2,8 +2,13 @@ English | [简体中文](README.zh-CN.md)
 
 # Userscripts
 
-A collection of userscripts developed and maintained by CycleDM to enhance
+A personally developed and maintained collection of userscripts to enhance
 website functionality, improve browsing, and automate common web tasks.
+
+This is a personal open-source project for learning, research, and everyday use,
+maintained without a commercial operating purpose. The code is shared to exchange
+ideas and practical experience. This describes the project's purpose; reuse is
+governed by the applicable licenses below.
 
 Scripts are driven by personal needs and may not suit every user or environment.
 Compatibility with Tampermonkey, Violentmonkey, and other userscript managers is

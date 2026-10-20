@@ -108,6 +108,24 @@ the userscript license identifier.
   confirmation of permission. Do not change existing licenses without
   authorization; document any authorized exceptions explicitly.
 
+## Script Icons
+
+- Use target-website icons from [Dashboard Icons](https://github.com/homarr-labs/dashboard-icons)
+  or [Simple Icons](https://github.com/simple-icons/simple-icons). Choose the
+  candidate with the best clarity and recognizable artwork coverage at small
+  sizes, preferring Dashboard Icons when equally suitable. Every script must
+  embed its `@icon` as a Base64 image data URL; remote icon URLs are not allowed.
+  Provide a 64-by-64 Base64 `@icon64` for larger manager views. Prefer a compact
+  128-by-128 PNG for `@icon` with clear artwork and minimal unnecessary padding.
+  Larger source dimensions alone do not enlarge Tampermonkey's display
+  area. Check decoding and display where possible, and report validation limits
+  in the task summary.
+- Do not add standalone icon copyright declarations, attribution files,
+  brand-permission reviews, or pending-approval prose to script documentation.
+  Source-image copies and other supporting files are optional and should serve
+  a concrete maintenance purpose. Keep icon work focused on usability without
+  adding dependencies, tools, or unrelated changes.
+
 ## Documentation Maintenance
 
 Maintain `README.md` in English and `README.zh-CN.md` in Simplified Chinese,
@@ -234,6 +252,9 @@ These conventions do not require commit tooling or dependencies.
 - [ ] Names, directory layout, and `.user.js` entry filenames follow conventions.
 - [ ] Metadata matches behavior and requests only necessary scope/permissions.
 - [ ] Licenses, copyright, and third-party attribution are accurate.
+- [ ] The website icon comes from Dashboard Icons or Simple Icons, is
+  recognizable at small sizes, and uses valid Base64 image data URLs in `@icon`
+  and `@icon64`; decoded images have the intended dimensions.
 - [ ] English and Simplified Chinese READMEs are synchronized where affected.
 - [ ] Each script has both Greasy Fork description Markdown files, aligned with
   its READMEs, using absolute public links without language-switching links;
